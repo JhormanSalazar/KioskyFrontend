@@ -15,24 +15,30 @@ import { RouterLink } from 'vue-router'
 
         <!-- Enlaces de navegación -->
         <div class="flex space-x-6">
-          <RouterLink to="/" class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
+          <RouterLink
+            to="/"
+            class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition"
+          >
             Inicio
           </RouterLink>
-          <RouterLink to="/about"
-            class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
+          <RouterLink
+            to="/about"
+            class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition"
+          >
             Acerca de
           </RouterLink>
-          <a href="#" class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
+          <a
+            href="#"
+            class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition"
+          >
             Servicios
           </a>
-          <a href="#" class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition"
-            </RouterLink>
-            <a href="#" class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
-              Servicios
-            </a>
-            <a href="#" class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
-              Contacto
-            </a>
+          <a
+            href="#"
+            class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition"
+          >
+            Contacto
+          </a>
         </div>
       </div>
     </div>
