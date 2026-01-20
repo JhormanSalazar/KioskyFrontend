@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router'
 </script>
 
 <template>
-  <nav class="my-bg shadow-lg fixed top-0 w-full z-50">
+  <nav class="my-bg shadow-lg fixed top-0 w-full z-50 backdrop-blur-sm">
     <div class="w-full mx-auto px-4">
       <div class="flex items-center h-16">
         <!-- Logo - Izquierda -->
