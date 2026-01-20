@@ -16,10 +16,13 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "@tailwindplus/elements": "^1.0.22",
     "axios": "^1.13.2",
     "lucide-vue-next": "^0.562.0",
     "pinia": "^3.0.4",
     "primevue": "^4.5.4",
+    "tailwindcss": "^4.1.18",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4",
     "vuedraggable": "^4.1.0"
