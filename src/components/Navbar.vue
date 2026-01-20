@@ -9,7 +9,7 @@ import { RouterLink } from 'vue-router'
         <!-- Logo -->
         <div class="shrink-0">
           <RouterLink to="/">
-            <img class="h-10 w-auto" src="../../public/kiosky-logo.png" alt="kiosky-logo">
+            <img class="h-10 w-auto" src="../../public/kiosky-logo.png" alt="kiosky-logo" />
           </RouterLink>
         </div>
 
@@ -25,9 +25,14 @@ import { RouterLink } from 'vue-router'
           <a href="#" class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
             Servicios
           </a>
-          <a href="#" class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
-            Contacto
-          </a>
+          <a href="#" class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition"
+            </RouterLink>
+            <a href="#" class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
+              Servicios
+            </a>
+            <a href="#" class="text-gray-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
+              Contacto
+            </a>
         </div>
       </div>
     </div>
