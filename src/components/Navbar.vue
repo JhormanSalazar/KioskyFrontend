@@ -9,7 +9,7 @@ import { RouterLink } from 'vue-router'
         <!-- Logo - Izquierda -->
         <div class="shrink-0">
           <RouterLink to="/">
-            <img class="h-10 w-auto" src="../../public/kiosky-logo.png" alt="kiosky-logo" />
+            <img class="h-10 w-auto" src="../../public/kiosky-amber-200.png" alt="kiosky-logo" />
           </RouterLink>
         </div>
 

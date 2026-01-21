@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { Code, MessageCircle, Smartphone } from 'lucide-vue-next'
+import { Code, CodeXml, MessageCircle, Smartphone } from 'lucide-vue-next'
 import ServiceCard from './ServiceCard.vue'
 </script>
 
 <template>
-  <div class="service-bg py-20 min-h-screen">
+  <div class="service-bg py-18 min-h-screen">
     <div class="text-center">
       <h2 class="text-3xl font-bold sm:text-4xl">Todo lo que necesitas para vender más</h2>
       <p class="mx-auto pt-4 text-lg text-muted-foreground">
@@ -18,7 +18,7 @@ import ServiceCard from './ServiceCard.vue'
         class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-md md:max-w-2xl lg:max-w-5xl w-full justify-items-center md:justify-items-stretch">
         <ServiceCard title="Creación sin código"
           description="Diseña catálogos profesionales con nuestro editor visual. Sin necesidad de conocimientos técnicos."
-          :icon="Code" />
+          :icon="CodeXml" />
         <ServiceCard title="Pedidos por WhatsApp"
           description="Tus clientes pueden realizar pedidos directamente desde el catálogo vía WhatsApp. Simple y directo."
           :icon="MessageCircle" />
