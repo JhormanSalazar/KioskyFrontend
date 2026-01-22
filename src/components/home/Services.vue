@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { Code, CodeXml, MessageCircle, Smartphone } from 'lucide-vue-next'
+import { CodeXml, MessageCircle, Smartphone } from 'lucide-vue-next'
 import ServiceCard from './ServiceCard.vue'
 </script>
 
 <template>
-  <div class="service-bg py-18 min-h-screen">
+  <div class="service-bg py-18 min-h-screen bg-gray-900">
     <div class="text-center">
       <h2 class="text-3xl font-bold sm:text-4xl">Todo lo que necesitas para vender más</h2>
       <p class="mx-auto pt-4 text-lg text-muted-foreground">
