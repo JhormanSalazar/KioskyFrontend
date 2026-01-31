@@ -2,6 +2,8 @@
 import { RouterView } from 'vue-router'
 import NavBar from '@/components/Navbar.vue';
 import Footer from '@/components/home/Footer.vue';
+import NotificationToast from '@/components/ui/NotificationToast.vue';
+import ConfirmationModal from '@/components/ui/ConfirmationModal.vue';
 </script>
 
 <template>
@@ -11,6 +13,10 @@ import Footer from '@/components/home/Footer.vue';
       <RouterView />
     </main>
     <Footer />
+
+    <!-- Sistema de notificaciones global -->
+    <NotificationToast />
+    <ConfirmationModal />
   </div>
 </template>
 

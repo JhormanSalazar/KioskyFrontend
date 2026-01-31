@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-vue-next'
+import { useApiMutation } from '@/composables/useApi'
+import { authService } from '@/api/services'
+import { useRouter } from 'vue-router'
+import { useNotifications } from '@/composables/useNotifications'
+
+const { mutate: registerUser, loading, error } = useApiMutation(authService.register)
+const { success, error: showError } = useNotifications()
+const router = useRouter()
 
 const formData = ref({
   fullName: '',
@@ -60,10 +68,32 @@ const validateForm = () => {
   return isValid
 }
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   if (validateForm()) {
-    console.log('Formulario válido', formData.value)
-    // Aquí puedes agregar la lógica para enviar los datos al backend
+    const res = await registerUser({
+      fullName: formData.value.fullName,
+      email: formData.value.email,
+      password: formData.value.password
+    })
+
+    if (res) {
+      // Mostrar notificación de éxito
+      success(
+        '¡Cuenta creada exitosamente!',
+        `Bienvenido ${res.fullName}. Redirigiendo al panel...`
+      )
+
+      // Redirigir después de un breve delay para que vea la notificación
+      setTimeout(() => {
+        router.push('/dashboard')
+      }, 1500)
+    } else if (error.value) {
+      // Mostrar notificación de error
+      showError(
+        'Error al crear la cuenta',
+        error.value.message || 'Ocurrió un problema al procesar tu registro. Inténtalo de nuevo.'
+      )
+    }
   }
 }
 </script>
@@ -154,9 +184,22 @@ const handleSubmit = () => {
           </div>
 
           <!-- Submit Button -->
-          <button type="submit"
-            class="w-full bg-amber-200 text-black font-semibold py-3 px-4 rounded-lg hover:bg-amber-100 transition duration-200 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 focus:ring-offset-gray-900">
-            Crear cuenta
+          <button type="submit" :disabled="loading" :class="[
+            'w-full font-semibold py-3 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 focus:ring-offset-gray-900',
+            loading
+              ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
+              : 'bg-amber-200 text-black hover:bg-amber-100'
+          ]">
+            <span v-if="loading" class="flex items-center justify-center">
+              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-300" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
+              </svg>
+              Creando cuenta...
+            </span>
+            <span v-else>Crear cuenta</span>
           </button>
         </form>
 
@@ -172,7 +215,7 @@ const handleSubmit = () => {
           </div>
         </div>
 
-        <!-- Social Login -->
+        <!-- Social Login
         <div class="mt-6 grid grid-cols-2 gap-3">
           <button type="button"
             class="w-full inline-flex justify-center items-center py-2.5 px-4 border border-gray-700 rounded-lg bg-gray-800 hover:bg-gray-700 transition duration-200">
@@ -197,7 +240,7 @@ const handleSubmit = () => {
             </svg>
             <span class="ml-2 text-gray-300 text-sm font-medium">Facebook</span>
           </button>
-        </div>
+        </div> -->
 
         <!-- Login Link -->
         <div class="mt-6 text-center">
