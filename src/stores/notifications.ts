@@ -38,8 +38,9 @@ export const useNotificationStore = defineStore('notifications', () => {
   const addNotification = (notification: Omit<Notification, 'id'>) => {
     const newNotification: Notification = {
       id: generateId(),
-      duration: 5000, // 5 segundos por defecto
       ...notification,
+      // Asegurar que siempre haya un valor de duration, incluso si viene undefined
+      duration: notification.duration ?? 5000, // 5 segundos por defecto
     }
 
     notifications.value.push(newNotification)

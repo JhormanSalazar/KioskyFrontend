@@ -163,7 +163,7 @@ const handleSubmit = async () => {
         <!-- Signup Link -->
         <div class="mt-6 text-center">
           <p class="text-sm text-gray-400">
-            <router-link to="/register" class="font-medium text-amber-200 hover:text-amber-100 transition duration-200">
+            <router-link to="/signup" class="font-medium text-amber-200 hover:text-amber-100 transition duration-200">
               Crear cuenta nueva
             </router-link>
           </p>
