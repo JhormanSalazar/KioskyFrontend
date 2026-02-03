@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import DashboardLayout from '../layouts/DashboardLayout.vue'
+import { authService } from '@/api/services/auth.service'
+import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,9 +15,6 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue'),
     },
     {
@@ -61,6 +60,41 @@ const router = createRouter({
       ],
     },
   ],
+})
+
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore()
+
+  const publicPages = ['/', '/about', '/login', '/signup']
+  const authRequired = !publicPages.includes(to.path)
+
+  const hasToken = authService.isAuthenticated()
+
+  if (hasToken && !userStore.currentUser) {
+    try {
+      await userStore.loadUser()
+    } catch (error) {
+      authService.logout()
+      userStore.logout()
+      if (authRequired) {
+        return next({ name: 'login' })
+      }
+      console.error('Error loading user data:', error)
+    }
+  }
+
+  // Proteger rutas privadas
+  if (authRequired && !userStore.isAuthenticated) {
+    return next({ name: 'login' })
+  }
+
+  // Si esta autenticado e intenta ir a login o signup, redirigir al dashboard
+  if (userStore.isAuthenticated && (to.path === '/login' || to.path === '/signup')) {
+    return next({ name: 'dashboard' })
+  }
+
+  // Continuar navegación si cumple con todo
+  next()
 })
 
 export default router

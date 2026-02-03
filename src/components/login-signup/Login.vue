@@ -5,10 +5,12 @@ import { useApiMutation } from '@/composables/useApi'
 import { authService } from '@/api/services'
 import { useRouter } from 'vue-router'
 import { useNotifications } from '@/composables/useNotifications'
+import { useUserStore } from '@/stores/user'
 
 const { mutate: loginUser, loading, error } = useApiMutation(authService.login)
 const { success, error: showError } = useNotifications()
 const router = useRouter()
+const userStore = useUserStore()
 
 const formData = ref({
   email: '',
@@ -53,6 +55,9 @@ const handleSubmit = async () => {
     })
 
     if (res) {
+      // Cargar los datos del usuario en el store
+      await userStore.loadUser()
+
       // Mostrar notificación de éxito
       success(
         '¡Inicio de sesión exitoso!',
@@ -62,7 +67,7 @@ const handleSubmit = async () => {
       // Redirigir después de un breve delay para que vea la notificación
       setTimeout(() => {
         router.push('/dashboard')
-      }, 1500)
+      }, 1000)
     } else if (error.value) {
       // Mostrar notificación de error
       showError(

@@ -163,6 +163,7 @@ export interface AppUserResponse {
   fullName: string;
   email: string;
   storeId?: number
+  role: UserRole;
 }
 
 

@@ -62,7 +62,7 @@ export const authService = {
       localStorage.setItem('auth_token', response.data.token)
     }
 
-    return response.data  
+    return response.data
   },
 
   /**
@@ -71,8 +71,7 @@ export const authService = {
    */
   logout(): void {
     localStorage.removeItem('auth_token')
-    localStorage.removeItem('refresh_token')
-    // Redirigir al login si es necesario
+    // Redirigir al login
     window.location.href = '/login'
   },
 
