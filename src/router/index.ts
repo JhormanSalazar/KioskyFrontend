@@ -70,10 +70,12 @@ router.beforeEach(async (to, from, next) => {
 
   const hasToken = authService.isAuthenticated()
 
+  // Si hay token pero no hay usuario cargado, cargar usuario
   if (hasToken && !userStore.currentUser) {
     try {
       await userStore.loadUser()
     } catch (error) {
+      // Si falla la carga del usuario, limpiar sesión
       authService.logout()
       userStore.logout()
       if (authRequired) {
@@ -83,13 +85,13 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  // Proteger rutas privadas
-  if (authRequired && !userStore.isAuthenticated) {
+  // Proteger rutas privadas - verificar token primero
+  if (authRequired && !hasToken) {
     return next({ name: 'login' })
   }
 
   // Si esta autenticado e intenta ir a login o signup, redirigir al dashboard
-  if (userStore.isAuthenticated && (to.path === '/login' || to.path === '/signup')) {
+  if (hasToken && (to.path === '/login' || to.path === '/signup')) {
     return next({ name: 'dashboard' })
   }
 

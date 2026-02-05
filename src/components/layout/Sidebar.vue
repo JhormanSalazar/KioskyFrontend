@@ -88,9 +88,9 @@ const handleLogout = () => {
     <div class="p-4 border-t border-gray-700">
       <div class="bg-gray-800 rounded-lg p-4">
         <div class="flex py-2 ">
-          <SquareUserRound class="h-10 w-10 text-amber-200"/>
-          <div class="flex flex-col pl-0.5">
-            <p class="text-md text-amber-200 font-semibold mb-1">{{ userStore.currentUser?.fullName }}</p>
+          <SquareUserRound class="h-10 w-10 text-amber-200 flex-shrink-0" />
+          <div class="flex flex-col pl-0.5 min-w-0 flex-1">
+            <p class="text-md text-amber-200 font-semibold mb-1 truncate">{{ userStore.currentUser?.fullName }}</p>
             <p class="text-xs text-white mb-3">{{ userStore.currentUser?.role }}</p>
           </div>
         </div>

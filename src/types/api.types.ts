@@ -136,8 +136,15 @@ export interface UpdateProductRequest {
 }
 
 // ===== TIENDAS =====
+export interface SimpleStoreResponse {
+  id: number;
+  name: string;
+  domain: string;
+}
+
 export interface StoreResponse {
   id: number;
+  name: string;
   domain: string;
   themeSettings?: string;
   categories: CategoryResponse[];
@@ -145,11 +152,13 @@ export interface StoreResponse {
 }
 
 export interface RegisterStoreRequest {
+  name: string;
   domain: string;
   themeSettings?: string;
 }
 
 export interface RegisterStoreWithUserRequest {
+  name: string;
   domain: string;
   themeSettings?: string;
   fullName: string;
@@ -162,8 +171,13 @@ export interface AppUserResponse {
   id: number;
   fullName: string;
   email: string;
-  storeId?: number
+  storeId?: number;
   role: UserRole;
+}
+
+export interface UpdateAppUserRequest {
+  fullName: string;
+  password?: string;
 }
 
 

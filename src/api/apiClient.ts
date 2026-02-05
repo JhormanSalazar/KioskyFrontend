@@ -4,7 +4,7 @@ import type { ApiError, ApiResponse } from '@/types/api.types'
 
 /**
  * Configuración de la instancia de Axios
- * 
+ *
  * Esta instancia está preconfigurada con:
  * - URL base de la API
  * - Timeout
@@ -18,8 +18,8 @@ const apiClient: AxiosInstance = axios.create({
   timeout: 30000, // 30 segundos
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  }
+    Accept: 'application/json',
+  },
 })
 
 /**
@@ -31,7 +31,7 @@ apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // Obtener token del localStorage (o de tu store de Pinia)
     const token = localStorage.getItem('auth_token')
-    
+
     if (token && config.headers) {
       // Añadir token al header Authorization
       config.headers.Authorization = `Bearer ${token}`
@@ -47,7 +47,7 @@ apiClient.interceptors.request.use(
   (error: AxiosError) => {
     console.error('❌ Request Error:', error)
     return Promise.reject(error)
-  }
+  },
 )
 
 /**
@@ -75,11 +75,14 @@ apiClient.interceptors.response.use(
 
       switch (status) {
         case 401:
-          // No autorizado - limpiar sesión y redirigir al login
+          // No autorizado - limpiar sesión y redirigir al login SOLO si no estamos ya en login
           console.warn('🔒 Sesión expirada o no autorizado')
           localStorage.removeItem('auth_token')
-          // Redirigir al login (puedes usar el router aquí)
-          window.location.href = '/login'
+          // Solo redirigir si NO estamos en las páginas de autenticación
+          const currentPath = window.location.pathname
+          if (currentPath !== '/login' && currentPath !== '/signup') {
+            window.location.href = '/login'
+          }
           break
 
         case 403:
@@ -109,7 +112,7 @@ apiClient.interceptors.response.use(
         status: status,
         errors: error.response.data?.errors,
         timestamp: error.response.data?.timestamp,
-        path: error.response.data?.path
+        path: error.response.data?.path,
       }
 
       return Promise.reject(apiError)
@@ -118,17 +121,17 @@ apiClient.interceptors.response.use(
       console.error('📡 No hay respuesta del servidor')
       return Promise.reject({
         message: 'No se pudo conectar con el servidor. Verifica tu conexión.',
-        status: 0
+        status: 0,
       } as ApiError)
     } else {
       // Error al configurar la petición
       console.error('⚙️ Error al configurar la petición')
       return Promise.reject({
         message: error.message,
-        status: 0
+        status: 0,
       } as ApiError)
     }
-  }
+  },
 )
 
 export default apiClient
