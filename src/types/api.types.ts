@@ -154,7 +154,6 @@ export interface StoreResponse {
 export interface RegisterStoreRequest {
   name: string;
   domain: string;
-  themeSettings?: string;
 }
 
 export interface RegisterStoreWithUserRequest {

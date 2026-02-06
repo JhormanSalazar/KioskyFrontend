@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { useApi } from '@/composables/useApi';
+import { useApi, useApiMutation } from '@/composables/useApi';
 import { useUserStore } from '@/stores/user';
 import { storeService } from '@/api/services/store.service';
-import type { AppUserResponse, SimpleStoreResponse, UpdateAppUserRequest } from '@/types/api.types';
+import type { AppUserResponse, SimpleStoreResponse, UpdateAppUserRequest, RegisterStoreRequest } from '@/types/api.types';
 import { useNotifications } from '@/composables/useNotifications';
+import CreateStoreModal from '@/components/configuration/CreateStoreModal.vue';
 
 // ref para los datos de configuración
 const userStore = useUserStore();
 const { execute: loadStoreInfo } = useApi(storeService.getSimpleStoreById);
-const { error } = useNotifications();
+const { mutate: createStore, error: createStoreError, loading: createStoreLoading } = useApiMutation(storeService.createStoreForUser);
+const { success, error } = useNotifications();
+
+// Variable reactiva para mostrar modal
+const isCreateStoreModalOpen = ref(false);
 
 // Estado para la información de la tienda
 const storeInfo = ref<SimpleStoreResponse | null>(null);
@@ -91,12 +96,42 @@ const handleStoreSubmit = async () => {
 };
 
 // Función para cargar la configuración de la tienda
-const loadStoreConfig = async () => {
-  if (storeInfo.value !== null) return;
+const loadStoreConfig = async (force = false) => {
+  if (!force && storeInfo.value !== null) return;
 
   if (!userStore.currentUser?.storeId) return;
 
   storeInfo.value = await loadStoreInfo(userStore.currentUser.storeId);
+};
+
+// Funcion que abre el modal de crear tienda
+const handleCreateStore = async (storeData: RegisterStoreRequest) => {
+  if (userInfo.value !== null && userInfo.value.storeId === null) {
+    const result = await createStore(userInfo.value.id, storeData);
+    if (result) {
+      // Actualizar userInfo con el nuevo storeId
+      userInfo.value.storeId = result.id;
+
+      // Actualizar el currentUser en el store con el nuevo storeId
+      if (userStore.currentUser) {
+        userStore.currentUser.storeId = result.id;
+        // Actualizar también en localStorage para persistencia
+        localStorage.setItem('currentUserInfo', JSON.stringify(userStore.currentUser));
+      }
+
+      isCreateStoreModalOpen.value = false;
+      success('Tienda creada exitosamente');
+
+      // Forzar la carga de la configuración de la tienda recién creada
+      await loadStoreConfig(true);
+    } else if (createStoreError.value) {
+      error(
+        'Error al crear la tienda',
+        createStoreError.value?.message || 'Por favor verifica los datos ingresados'
+      );
+    }
+    return;
+  }
 };
 
 // LifeCycle hook para cargar la configuración al montar el componente
@@ -179,7 +214,14 @@ onMounted(async () => {
           </button>
         </div>
         <div v-else-if="!userStore.currentUser?.storeId" class="py-4 text-gray-500">
-          No tienes una tienda asociada
+          No tienes una tienda asociada, crea una para configurar sus detalles.
+
+          <div>
+            <button @click="isCreateStoreModalOpen = true"
+              class="mt-3 bg-amber-200 text-black px-4 py-2 rounded-lg hover:bg-amber-100 transition-colors duration-200">
+              Crear Tienda
+            </button>
+          </div>
         </div>
         <div v-else class="py-4 text-gray-500">
           Cargando información de la tienda...
@@ -187,6 +229,10 @@ onMounted(async () => {
       </div>
     </div>
   </div>
+
+  <!-- Modal de Crear Tienda -->
+  <CreateStoreModal :is-open="isCreateStoreModalOpen" :loading="createStoreLoading"
+    @close="isCreateStoreModalOpen = false" @saveStoreInfo="handleCreateStore" />
 </template>
 
 <style scoped>
