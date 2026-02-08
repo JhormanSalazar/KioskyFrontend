@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import type { AppUserResponse, UpdateAppUserRequest } from '@/types/api.types'
 import { useApi, useApiMutation } from '@/composables/useApi'
 import { authService } from '@/api/services'
-import { userService } from '@/api/services/user.service'
+import { userService } from '@/api/services'
 import { useNotifications } from '@/composables/useNotifications'
 
 export const useUserStore = defineStore('user', () => {

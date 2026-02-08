@@ -6,7 +6,7 @@ import {
   FolderOpen,
   Edit3,
   UserCog,
-  SquareUserRound
+  SquareUser
 } from 'lucide-vue-next'
 import { useUserStore } from '@/stores/user'
 
@@ -61,7 +61,7 @@ const handleLogout = () => {
     <div class="p-6 px-4 border-b border-gray-700">
       <div class="flex items-center space-x-2">
         <div>
-          <h1 class="text-lg font-semibold text-amber-200">Kiosky</h1>
+          <h1 class="text-3xl font-semibold text-amber-200">Kiosky</h1>
           <p class="text-sm text-gray-400">Panel de Administración</p>
         </div>
       </div>
@@ -87,17 +87,17 @@ const handleLogout = () => {
     <!-- User Section -->
     <div class="p-4 border-t border-gray-700">
       <div class="bg-gray-800 rounded-lg p-4">
-        <div class="flex py-2 ">
-          <SquareUserRound class="h-10 w-10 text-amber-200 flex-shrink-0" />
+        <div class="flex py-2 items-center space-x-1">
+          <SquareUser class="h-8 w-8 text-amber-200 flex-shrink-0" />
           <div class="flex flex-col pl-0.5 min-w-0 flex-1">
-            <p class="text-md text-amber-200 font-semibold mb-1 truncate">{{ userStore.currentUser?.fullName }}</p>
-            <p class="text-xs text-white mb-3">{{ userStore.currentUser?.role }}</p>
+            <p class="text-md text-amber-200 mb-1 truncate">{{ userStore.currentUser?.fullName }}</p>
+
           </div>
         </div>
         <button @click="handleLogout"
           class="w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-md bg-amber-200 text-gray-900 transition-colors duration-200 cursor-pointer hover:bg-amber-100">
 
-          <span class="text-sm font-medium">Log out</span>
+          <span class="text-sm font-medium">Cerrar sesión</span>
         </button>
       </div>
     </div>

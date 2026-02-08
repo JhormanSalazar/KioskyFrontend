@@ -183,7 +183,7 @@ onMounted(async () => {
             <p class="mt-1 text-xs text-gray-500">Deja este campo vacío si no deseas cambiar tu contraseña</p>
           </div>
           <button @click="handleUserSubmit" :disabled="!isUserFormValid || userStore.userLoading"
-            class="bg-amber-200 text-black px-4 py-2 rounded-lg hover:bg-amber-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+            class="bg-amber-200 text-black text-sm px-4 py-2 rounded-lg hover:bg-amber-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
             {{ userStore.userLoading ? 'Guardando...' : 'Guardar Cambios' }}
           </button>
         </div>
@@ -209,7 +209,7 @@ onMounted(async () => {
               placeholder="mitienda.kiosky.com">
           </div>
           <button @click="handleStoreSubmit" :disabled="!isStoreFormValid"
-            class="bg-amber-200 text-black px-4 py-2 rounded-lg hover:bg-amber-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+            class="bg-amber-200 text-black text-sm px-4 py-2 rounded-lg hover:bg-amber-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
             Actualizar Tienda
           </button>
         </div>

@@ -15,13 +15,15 @@ import type {
  * - Validación de slugs únicos
  */
 
+const baseURL = '/categories'
+
 export const categoryService = {
   /**
    * Obtener todas las categorías
    * @returns Lista de todas las categorías del sistema
    */
   async getAll(): Promise<CategoryResponse[]> {
-    const response = await apiClient.get<CategoryResponse[]>('/api/categories')
+    const response = await apiClient.get<CategoryResponse[]>(baseURL)
     return response.data
   },
 
@@ -31,7 +33,7 @@ export const categoryService = {
    * @returns Categoría encontrada
    */
   async getById(id: number): Promise<CategoryResponse> {
-    const response = await apiClient.get<CategoryResponse>(`/api/categories/${id}`)
+    const response = await apiClient.get<CategoryResponse>(`${baseURL}/${id}`)
     return response.data
   },
 
@@ -41,7 +43,7 @@ export const categoryService = {
    * @returns Categoría encontrada
    */
   async getBySlug(slug: string): Promise<CategoryResponse> {
-    const response = await apiClient.get<CategoryResponse>(`/api/categories/slug/${slug}`)
+    const response = await apiClient.get<CategoryResponse>(`${baseURL}/slug/${slug}`)
     return response.data
   },
 
@@ -51,7 +53,7 @@ export const categoryService = {
    * @returns Lista de categorías de la tienda
    */
   async getByStoreId(storeId: number): Promise<CategoryResponse[]> {
-    const response = await apiClient.get<CategoryResponse[]>(`/api/categories/store/${storeId}`)
+    const response = await apiClient.get<CategoryResponse[]>(`${baseURL}/store/${storeId}`)
     return response.data
   },
 
@@ -63,7 +65,7 @@ export const categoryService = {
    */
   async getByStoreAndSlug(storeId: number, slug: string): Promise<CategoryResponse> {
     const response = await apiClient.get<CategoryResponse>(
-      `/api/categories/store/${storeId}/slug/${slug}`
+      `${baseURL}/store/${storeId}/slug/${slug}`
     )
     return response.data
   },
@@ -77,7 +79,7 @@ export const categoryService = {
    */
   async slugExists(storeId: number, slug: string): Promise<boolean> {
     const response = await apiClient.get<boolean>(
-      `/api/categories/store/${storeId}/slug/${slug}/exists`
+      `${baseURL}/store/${storeId}/slug/${slug}/exists`
     )
     return response.data
   },
@@ -88,7 +90,7 @@ export const categoryService = {
    * @returns Categoría creada con su ID asignado
    */
   async create(category: CreateCategoryRequest): Promise<CategoryResponse> {
-    const response = await apiClient.post<CategoryResponse>('/api/categories', category)
+    const response = await apiClient.post<CategoryResponse>(baseURL, category)
     return response.data
   },
 
@@ -99,7 +101,7 @@ export const categoryService = {
    * @returns Categoría actualizada
    */
   async update(id: number, category: UpdateCategoryRequest): Promise<CategoryResponse> {
-    const response = await apiClient.put<CategoryResponse>(`/api/categories/${id}`, category)
+    const response = await apiClient.put<CategoryResponse>(`${baseURL}/${id}`, category)
     return response.data
   },
 
@@ -110,6 +112,6 @@ export const categoryService = {
    * @param id - ID de la categoría a eliminar
    */
   async delete(id: number): Promise<void> {
-    await apiClient.delete(`/api/categories/${id}`)
+    await apiClient.delete(`${baseURL}/${id}`)
   }
 }

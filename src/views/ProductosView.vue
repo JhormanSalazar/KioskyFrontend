@@ -5,8 +5,7 @@ import DataTable from '@/components/ui/DataTable.vue'
 import FormModal from '@/components/ui/FormModal.vue'
 import FormField from '@/components/ui/FormField.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
-import { productService } from '@/api/services/product.service'
-import { categoryService } from '@/api/services/category.service'
+import { productService, categoryService } from '@/api/services'
 import { useUserStore } from '@/stores/user'
 import { useNotifications } from '@/composables/useNotifications'
 import type { ProductResponse, CreateProductRequest, UpdateProductRequest, CategoryResponse } from '@/types/api.types'
@@ -41,7 +40,7 @@ const savingProduct = ref(false)
 const currentProductId = ref<number | null>(null)
 
 // Formulario
-const form = ref({
+const form = ref<Omit<CreateProductRequest, 'storeId'>>({
   name: '',
   slug: '',
   price: 0,
@@ -366,10 +365,10 @@ const removeImageField = (index: number) => {
  */
 const isFormValid = computed(() => {
   return form.value.name.trim().length >= 2 &&
-         form.value.slug.trim().length >= 2 &&
-         /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(form.value.slug) &&
-         form.value.price >= 0 &&
-         form.value.categoryId > 0
+    form.value.slug.trim().length >= 2 &&
+    /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(form.value.slug) &&
+    form.value.price >= 0 &&
+    form.value.categoryId > 0
 })
 
 // Watch para generar slug automáticamente
@@ -388,48 +387,30 @@ onMounted(() => {
 <template>
   <div class="productos-view">
     <!-- Tabla de productos -->
-    <DataTable
-      title="Productos"
-      subtitle="Gestiona tu inventario de productos"
-      :columns="columns"
-      :items="products"
-      :loading="loading"
-      :empty-icon="Package"
-      empty-message="No hay productos"
-      empty-subtext="Comienza agregando tu primer producto a la tienda"
-      create-button-text="Agregar Producto"
-      @create="handleCreate"
-      @edit="handleEdit"
-      @delete="handleDelete"
-    >
+    <DataTable title="Productos" subtitle="Gestiona tu inventario de productos" :columns="columns" :items="products"
+      :loading="loading" :empty-icon="Package" empty-message="No hay productos"
+      empty-subtext="Comienza agregando tu primer producto a la tienda" create-button-text="Agregar Producto"
+      @create="handleCreate" @edit="handleEdit" @delete="handleDelete">
       <!-- Slot personalizado para acciones -->
       <template #actions="{ item }">
         <div class="flex items-center justify-end space-x-2">
-          <button
-            @click="toggleVisibility(item)"
+          <button @click="toggleVisibility(item)"
             :class="item.isVisible ? 'text-green-600 hover:text-green-900' : 'text-gray-400 hover:text-gray-600'"
-            :title="item.isVisible ? 'Ocultar producto' : 'Mostrar producto'"
-            class="transition-colors"
-          >
+            :title="item.isVisible ? 'Ocultar producto' : 'Mostrar producto'" class="transition-colors">
             <Eye v-if="item.isVisible" class="h-5 w-5" />
             <EyeOff v-else class="h-5 w-5" />
           </button>
-          <button
-            @click="handleEdit(item)"
-            class="text-blue-600 hover:text-blue-900 transition-colors"
-            title="Editar"
-          >
+          <button @click="handleEdit(item)" class="text-blue-600 hover:text-blue-900 transition-colors" title="Editar">
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
           </button>
-          <button
-            @click="handleDelete(item)"
-            class="text-red-600 hover:text-red-900 transition-colors"
-            title="Eliminar"
-          >
+          <button @click="handleDelete(item)" class="text-red-600 hover:text-red-900 transition-colors"
+            title="Eliminar">
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
           </button>
         </div>
@@ -437,77 +418,37 @@ onMounted(() => {
     </DataTable>
 
     <!-- Modal de crear/editar producto -->
-    <FormModal
-      v-model:isOpen="showModal"
-      :title="modalMode === 'create' ? 'Crear Producto' : 'Editar Producto'"
-      :icon="PackagePlus"
-      :loading="savingProduct"
-      :is-valid="isFormValid"
-      size="lg"
-      submit-text="Guardar"
-      @submit="handleSubmit"
-    >
+    <FormModal v-model:isOpen="showModal" :title="modalMode === 'create' ? 'Crear Producto' : 'Editar Producto'"
+      :icon="PackagePlus" :loading="savingProduct" :is-valid="isFormValid" size="lg" submit-text="Guardar"
+      @submit="handleSubmit">
       <div class="space-y-4">
         <!-- Nombre -->
-        <FormField
-          label="Nombre del producto"
-          required
-          :error="formErrors.name"
-        >
-          <BaseInput
-            v-model="form.name"
-            placeholder="Ej: Laptop Gamer, Camisa Polo..."
-            :has-error="!!formErrors.name"
-            autocomplete="off"
-          />
+        <FormField label="Nombre del producto" required :error="formErrors.name">
+          <BaseInput v-model="form.name" placeholder="Ej: Laptop Gamer, Camisa Polo..." :has-error="!!formErrors.name"
+            autocomplete="off" />
         </FormField>
 
         <!-- Slug -->
-        <FormField
-          label="Slug"
-          required
-          :error="formErrors.slug"
-          hint="Se genera automáticamente, pero puedes personalizarlo"
-        >
-          <BaseInput
-            v-model="form.slug"
-            placeholder="ej: laptop-gamer"
-            :has-error="!!formErrors.slug"
-            autocomplete="off"
-          />
+        <FormField label="Slug" required :error="formErrors.slug"
+          hint="Se genera automáticamente, pero puedes personalizarlo">
+          <BaseInput v-model="form.slug" placeholder="ej: laptop-gamer" :has-error="!!formErrors.slug"
+            autocomplete="off" />
         </FormField>
 
         <!-- Precio y Categoría en dos columnas -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Precio -->
-          <FormField
-            label="Precio"
-            required
-            :error="formErrors.price"
-          >
-            <BaseInput
-              v-model.number="form.price"
-              type="number"
-              step="0.01"
-              min="0"
-              placeholder="0.00"
-              :has-error="!!formErrors.price"
-            />
+          <FormField label="Precio" required :error="formErrors.price">
+            <BaseInput v-model.number="form.price" type="number" step="0.01" min="0" placeholder="0.00"
+              :has-error="!!formErrors.price" />
           </FormField>
 
           <!-- Categoría -->
-          <FormField
-            label="Categoría"
-            required
-            :error="formErrors.categoryId"
-          >
-            <select
-              v-model.number="form.categoryId"
-              :class="[
-                'w-full px-4 py-2 bg-gray-800 border rounded-md text-gray-100 focus:outline-none focus:ring-2 transition-colors',
-                formErrors.categoryId ? 'border-red-500 focus:ring-red-500' : 'border-gray-600 focus:ring-amber-300 focus:border-amber-300'
-              ]"
-            >
+          <FormField label="Categoría" required :error="formErrors.categoryId">
+            <select v-model.number="form.categoryId" :class="[
+              'w-full px-4 py-2 bg-gray-800 border rounded-md text-gray-100 focus:outline-none focus:ring-2 transition-colors',
+              formErrors.categoryId ? 'border-red-500 focus:ring-red-500' : 'border-gray-600 focus:ring-amber-300 focus:border-amber-300'
+            ]">
               <option :value="0" disabled>Selecciona una categoría</option>
               <option v-for="cat in categories" :key="cat.id" :value="cat.id">
                 {{ cat.name }}
@@ -517,77 +458,43 @@ onMounted(() => {
         </div>
 
         <!-- Descripción -->
-        <FormField
-          label="Descripción"
-          optional
-          hint="Descripción detallada del producto"
-        >
-          <textarea
-            v-model="form.description"
-            rows="3"
-            placeholder="Describe tu producto..."
-            class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-300 transition-colors resize-none"
-          ></textarea>
+        <FormField label="Descripción" optional hint="Descripción detallada del producto">
+          <textarea v-model="form.description" rows="3" placeholder="Describe tu producto..."
+            class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-300 transition-colors resize-none"></textarea>
         </FormField>
 
         <!-- Visibilidad -->
         <div class="flex items-center space-x-3 p-3 bg-gray-800 rounded-md border border-gray-700">
-          <input
-            type="checkbox"
-            v-model="form.isVisible"
-            id="isVisible"
-            class="w-4 h-4 text-amber-300 bg-gray-700 border-gray-600 rounded focus:ring-amber-300 focus:ring-2"
-          />
+          <input type="checkbox" v-model="form.isVisible" id="isVisible"
+            class="w-4 h-4 text-amber-300 bg-gray-700 border-gray-600 rounded focus:ring-amber-300 focus:ring-2" />
           <label for="isVisible" class="text-sm text-gray-300 cursor-pointer">
             Producto visible en el catálogo
           </label>
         </div>
 
         <!-- Imágenes -->
-        <FormField
-          label="Imágenes (URLs)"
-          optional
-          hint="URLs de las imágenes del producto"
-        >
+        <FormField label="Imágenes (URLs)" optional hint="URLs de las imágenes del producto">
           <div v-if="form.images" class="space-y-2">
             <div v-for="(image, index) in form.images" :key="index" class="flex space-x-2">
-              <BaseInput
-                v-model="form.images[index]"
-                type="url"
-                placeholder="https://ejemplo.com/imagen.jpg"
-                class="flex-1"
-              />
-              <button
-                v-if="form.images.length > 1"
-                type="button"
-                @click="removeImageField(index)"
-                class="px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-              >
+              <BaseInput v-model="form.images[index]" type="url" placeholder="https://ejemplo.com/imagen.jpg"
+                class="flex-1" />
+              <button v-if="form.images.length > 1" type="button" @click="removeImageField(index)"
+                class="px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
                 ✕
               </button>
             </div>
-            <button
-              type="button"
-              @click="addImageField"
-              class="text-sm text-amber-200 hover:text-amber-300 transition-colors"
-            >
+            <button type="button" @click="addImageField"
+              class="text-sm text-amber-200 hover:text-amber-300 transition-colors">
               + Añadir otra imagen
             </button>
           </div>
         </FormField>
 
         <!-- Atributos (JSON) -->
-        <FormField
-          label="Atributos (JSON)"
-          optional
-          hint='Atributos adicionales en formato JSON: {"color": "rojo", "talla": "M"}'
-        >
-          <textarea
-            v-model="form.attributes"
-            rows="3"
-            placeholder='{"color": "rojo", "talla": "M"}'
-            class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-300 transition-colors resize-none font-mono text-sm"
-          ></textarea>
+        <FormField label="Atributos (JSON)" optional
+          hint='Atributos adicionales en formato JSON: {"color": "rojo", "talla": "M"}'>
+          <textarea v-model="form.attributes" rows="3" placeholder='{"color": "rojo", "talla": "M"}'
+            class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-300 transition-colors resize-none font-mono text-sm"></textarea>
         </FormField>
       </div>
     </FormModal>

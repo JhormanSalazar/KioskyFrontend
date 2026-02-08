@@ -15,13 +15,15 @@ import type {
  * - Validación de slugs únicos
  */
 
+const baseURL = '/products'
+
 export const productService = {
   /**
    * Obtener todos los productos del sistema
    * @returns Lista de todos los productos
    */
   async getAll(): Promise<ProductResponse[]> {
-    const response = await apiClient.get<ProductResponse[]>('/api/products')
+    const response = await apiClient.get<ProductResponse[]>(baseURL)
     return response.data
   },
 
@@ -31,7 +33,7 @@ export const productService = {
    * @returns Producto encontrado
    */
   async getById(id: number): Promise<ProductResponse> {
-    const response = await apiClient.get<ProductResponse>(`/api/products/${id}`)
+    const response = await apiClient.get<ProductResponse>(`${baseURL}/${id}`)
     return response.data
   },
 
@@ -41,7 +43,7 @@ export const productService = {
    * @returns Producto encontrado
    */
   async getBySlug(slug: string): Promise<ProductResponse> {
-    const response = await apiClient.get<ProductResponse>(`/api/products/slug/${slug}`)
+    const response = await apiClient.get<ProductResponse>(`${baseURL}/slug/${slug}`)
     return response.data
   },
 
@@ -51,7 +53,7 @@ export const productService = {
    * @returns Lista de productos de la categoría
    */
   async getByCategoryId(categoryId: number): Promise<ProductResponse[]> {
-    const response = await apiClient.get<ProductResponse[]>(`/api/products/category/${categoryId}`)
+    const response = await apiClient.get<ProductResponse[]>(`${baseURL}/category/${categoryId}`)
     return response.data
   },
 
@@ -61,7 +63,7 @@ export const productService = {
    * @returns Lista de productos de la tienda
    */
   async getByStoreId(storeId: number): Promise<ProductResponse[]> {
-    const response = await apiClient.get<ProductResponse[]>(`/api/products/store/${storeId}`)
+    const response = await apiClient.get<ProductResponse[]>(`${baseURL}/store/${storeId}`)
     return response.data
   },
 
@@ -71,7 +73,7 @@ export const productService = {
    * @returns Lista de productos visibles
    */
   async getVisibleByStoreId(storeId: number): Promise<ProductResponse[]> {
-    const response = await apiClient.get<ProductResponse[]>(`/api/products/store/${storeId}/visible`)
+    const response = await apiClient.get<ProductResponse[]>(`${baseURL}/store/${storeId}/visible`)
     return response.data
   },
 
@@ -83,7 +85,7 @@ export const productService = {
    */
   async searchByStore(storeId: number, query: string): Promise<ProductResponse[]> {
     const response = await apiClient.get<ProductResponse[]>(
-      `/api/products/store/${storeId}/search`,
+      `${baseURL}/store/${storeId}/search`,
       { params: { query } }
     )
     return response.data
@@ -102,7 +104,7 @@ export const productService = {
     maxPrice: number
   ): Promise<ProductResponse[]> {
     const response = await apiClient.get<ProductResponse[]>(
-      `/api/products/store/${storeId}/price-range`,
+      `${baseURL}/store/${storeId}/price-range`,
       { params: { minPrice, maxPrice } }
     )
     return response.data
@@ -116,7 +118,7 @@ export const productService = {
    */
   async getByStoreAndSlug(storeId: number, slug: string): Promise<ProductResponse> {
     const response = await apiClient.get<ProductResponse>(
-      `/api/products/store/${storeId}/slug/${slug}`
+      `${baseURL}/store/${storeId}/slug/${slug}`
     )
     return response.data
   },
@@ -129,7 +131,7 @@ export const productService = {
    */
   async slugExists(storeId: number, slug: string): Promise<boolean> {
     const response = await apiClient.get<boolean>(
-      `/api/products/store/${storeId}/slug/${slug}/exists`
+      `${baseURL}/store/${storeId}/slug/${slug}/exists`
     )
     return response.data
   },
@@ -140,7 +142,7 @@ export const productService = {
    * @returns Producto creado
    */
   async create(product: CreateProductRequest): Promise<ProductResponse> {
-    const response = await apiClient.post<ProductResponse>('/api/products', product)
+    const response = await apiClient.post<ProductResponse>(baseURL, product)
     return response.data
   },
 
@@ -151,7 +153,7 @@ export const productService = {
    * @returns Producto actualizado
    */
   async update(id: number, product: UpdateProductRequest): Promise<ProductResponse> {
-    const response = await apiClient.put<ProductResponse>(`/api/products/${id}`, product)
+    const response = await apiClient.put<ProductResponse>(`${baseURL}/${id}`, product)
     return response.data
   },
 
@@ -163,7 +165,7 @@ export const productService = {
    */
   async toggleVisibility(id: number, isVisible: boolean): Promise<ProductResponse> {
     const response = await apiClient.patch<ProductResponse>(
-      `/api/products/${id}/visibility`,
+      `${baseURL}/${id}/visibility`,
       { isVisible }
     )
     return response.data
@@ -174,7 +176,7 @@ export const productService = {
    * @param id - ID del producto a eliminar
    */
   async delete(id: number): Promise<void> {
-    await apiClient.delete(`/api/products/${id}`)
+    await apiClient.delete(`${baseURL}/${id}`)
   }
 }
 
