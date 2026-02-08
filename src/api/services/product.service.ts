@@ -1,40 +1,27 @@
 import apiClient from '../apiClient'
-import type { PageResponse, PaginationParams } from '@/types/api.types'
+import type {
+  ProductResponse,
+  CreateProductRequest,
+  UpdateProductRequest
+} from '@/types/api.types'
 
 /**
- * Servicio genérico para operaciones CRUD
- * 
- * Esta es una plantilla que puedes copiar y adaptar para otros recursos
- * Por ejemplo: productos, categorías, pedidos, etc.
+ * Servicio de Productos
+ *
+ * Maneja todas las operaciones relacionadas con productos:
+ * - Listar, crear, actualizar y eliminar productos
+ * - Búsqueda por slug, categoría, tienda
+ * - Filtrado por visibilidad y rango de precios
+ * - Validación de slugs únicos
  */
-
-// Define tu tipo de entidad aquí (ejemplo: Product)
-export interface Product {
-  id: number
-  name: string
-  description: string
-  price: number
-  stock: number
-  category: string
-  imageUrl?: string
-  createdAt?: string
-  updatedAt?: string
-}
 
 export const productService = {
   /**
-   * Obtener todos los productos (con paginación)
-   * @param params - Parámetros de paginación
-   * @returns Lista paginada de productos
+   * Obtener todos los productos del sistema
+   * @returns Lista de todos los productos
    */
-  async getAll(params?: PaginationParams): Promise<PageResponse<Product>> {
-    const response = await apiClient.get<PageResponse<Product>>('/products', {
-      params: {
-        page: params?.page || 0,
-        size: params?.size || 10,
-        sort: params?.sort || 'id,asc'
-      }
-    })
+  async getAll(): Promise<ProductResponse[]> {
+    const response = await apiClient.get<ProductResponse[]>('/api/products')
     return response.data
   },
 
@@ -43,40 +30,142 @@ export const productService = {
    * @param id - ID del producto
    * @returns Producto encontrado
    */
-  async getById(id: number): Promise<Product> {
-    const response = await apiClient.get<Product>(`/products/${id}`)
+  async getById(id: number): Promise<ProductResponse> {
+    const response = await apiClient.get<ProductResponse>(`/api/products/${id}`)
+    return response.data
+  },
+
+  /**
+   * Obtener un producto por slug
+   * @param slug - Slug único del producto
+   * @returns Producto encontrado
+   */
+  async getBySlug(slug: string): Promise<ProductResponse> {
+    const response = await apiClient.get<ProductResponse>(`/api/products/slug/${slug}`)
+    return response.data
+  },
+
+  /**
+   * Obtener todos los productos de una categoría
+   * @param categoryId - ID de la categoría
+   * @returns Lista de productos de la categoría
+   */
+  async getByCategoryId(categoryId: number): Promise<ProductResponse[]> {
+    const response = await apiClient.get<ProductResponse[]>(`/api/products/category/${categoryId}`)
+    return response.data
+  },
+
+  /**
+   * Obtener todos los productos de una tienda
+   * @param storeId - ID de la tienda
+   * @returns Lista de productos de la tienda
+   */
+  async getByStoreId(storeId: number): Promise<ProductResponse[]> {
+    const response = await apiClient.get<ProductResponse[]>(`/api/products/store/${storeId}`)
+    return response.data
+  },
+
+  /**
+   * Obtener productos visibles de una tienda (para el catálogo público)
+   * @param storeId - ID de la tienda
+   * @returns Lista de productos visibles
+   */
+  async getVisibleByStoreId(storeId: number): Promise<ProductResponse[]> {
+    const response = await apiClient.get<ProductResponse[]>(`/api/products/store/${storeId}/visible`)
+    return response.data
+  },
+
+  /**
+   * Buscar productos por nombre en una tienda
+   * @param storeId - ID de la tienda
+   * @param query - Término de búsqueda
+   * @returns Lista de productos que coinciden
+   */
+  async searchByStore(storeId: number, query: string): Promise<ProductResponse[]> {
+    const response = await apiClient.get<ProductResponse[]>(
+      `/api/products/store/${storeId}/search`,
+      { params: { query } }
+    )
+    return response.data
+  },
+
+  /**
+   * Filtrar productos por rango de precios en una tienda
+   * @param storeId - ID de la tienda
+   * @param minPrice - Precio mínimo
+   * @param maxPrice - Precio máximo
+   * @returns Lista de productos en el rango
+   */
+  async filterByPriceRange(
+    storeId: number,
+    minPrice: number,
+    maxPrice: number
+  ): Promise<ProductResponse[]> {
+    const response = await apiClient.get<ProductResponse[]>(
+      `/api/products/store/${storeId}/price-range`,
+      { params: { minPrice, maxPrice } }
+    )
+    return response.data
+  },
+
+  /**
+   * Obtener un producto por slug dentro de una tienda
+   * @param storeId - ID de la tienda
+   * @param slug - Slug del producto
+   * @returns Producto encontrado
+   */
+  async getByStoreAndSlug(storeId: number, slug: string): Promise<ProductResponse> {
+    const response = await apiClient.get<ProductResponse>(
+      `/api/products/store/${storeId}/slug/${slug}`
+    )
+    return response.data
+  },
+
+  /**
+   * Verificar si un slug ya existe en una tienda
+   * @param storeId - ID de la tienda
+   * @param slug - Slug a verificar
+   * @returns true si el slug ya existe
+   */
+  async slugExists(storeId: number, slug: string): Promise<boolean> {
+    const response = await apiClient.get<boolean>(
+      `/api/products/store/${storeId}/slug/${slug}/exists`
+    )
     return response.data
   },
 
   /**
    * Crear un nuevo producto
-   * @param product - Datos del producto (sin ID)
+   * @param product - Datos del nuevo producto
    * @returns Producto creado
    */
-  async create(product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>): Promise<Product> {
-    const response = await apiClient.post<Product>('/products', product)
+  async create(product: CreateProductRequest): Promise<ProductResponse> {
+    const response = await apiClient.post<ProductResponse>('/api/products', product)
     return response.data
   },
 
   /**
    * Actualizar un producto existente
-   * @param id - ID del producto a actualizar
+   * @param id - ID del producto
    * @param product - Nuevos datos del producto
    * @returns Producto actualizado
    */
-  async update(id: number, product: Partial<Product>): Promise<Product> {
-    const response = await apiClient.put<Product>(`/products/${id}`, product)
+  async update(id: number, product: UpdateProductRequest): Promise<ProductResponse> {
+    const response = await apiClient.put<ProductResponse>(`/api/products/${id}`, product)
     return response.data
   },
 
   /**
-   * Actualización parcial de un producto
+   * Cambiar la visibilidad de un producto
    * @param id - ID del producto
-   * @param updates - Campos a actualizar
+   * @param isVisible - Nueva visibilidad
    * @returns Producto actualizado
    */
-  async patch(id: number, updates: Partial<Product>): Promise<Product> {
-    const response = await apiClient.patch<Product>(`/products/${id}`, updates)
+  async toggleVisibility(id: number, isVisible: boolean): Promise<ProductResponse> {
+    const response = await apiClient.patch<ProductResponse>(
+      `/api/products/${id}/visibility`,
+      { isVisible }
+    )
     return response.data
   },
 
@@ -85,22 +174,7 @@ export const productService = {
    * @param id - ID del producto a eliminar
    */
   async delete(id: number): Promise<void> {
-    await apiClient.delete(`/products/${id}`)
-  },
-
-  /**
-   * Buscar productos por nombre
-   * @param query - Término de búsqueda
-   * @returns Lista de productos que coinciden
-   */
-  async search(query: string, params?: PaginationParams): Promise<PageResponse<Product>> {
-    const response = await apiClient.get<PageResponse<Product>>('/products/search', {
-      params: {
-        q: query,
-        page: params?.page || 0,
-        size: params?.size || 10
-      }
-    })
-    return response.data
+    await apiClient.delete(`/api/products/${id}`)
   }
 }
+

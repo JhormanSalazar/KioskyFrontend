@@ -102,17 +102,17 @@ const handleSubmit = async () => {
   <div class="signup-container min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full">
       <!-- Header -->
-      <div class="text-center mb-8">
+      <div class="text-center mb-2">
         <h2 class="text-4xl font-bold text-gray-100 mb-2">Crear cuenta</h2>
         <p class="text-gray-400 text-lg">Comienza tu experiencia con Kiosky</p>
       </div>
 
       <!-- Form Card -->
       <div class="bg-gray-900 rounded-lg shadow-xl p-8 border border-gray-800">
-        <form @submit.prevent="handleSubmit" class="space-y-6">
+        <form @submit.prevent="handleSubmit" class="space-y-4">
           <!-- Full Name -->
           <div>
-            <label for="fullName" class="block text-sm font-medium text-gray-300 mb-2">
+            <label for="fullName" class="block text-sm font-medium text-gray-300 mb-0.5">
               Nombre completo
             </label>
             <div class="relative">
@@ -127,7 +127,7 @@ const handleSubmit = async () => {
 
           <!-- Email -->
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
+            <label for="email" class="block text-sm font-medium text-gray-300 mb-0.5">
               Correo electrónico
             </label>
             <div class="relative">
@@ -142,7 +142,7 @@ const handleSubmit = async () => {
 
           <!-- Password -->
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
+            <label for="password" class="block text-sm font-medium text-gray-300 mb-0.5">
               Contraseña
             </label>
             <div class="relative">
@@ -162,7 +162,7 @@ const handleSubmit = async () => {
 
           <!-- Confirm Password -->
           <div>
-            <label for="confirmPassword" class="block text-sm font-medium text-gray-300 mb-2">
+            <label for="confirmPassword" class="block text-sm font-medium text-gray-300 mb-0.5">
               Confirmar contraseña
             </label>
             <div class="relative">
@@ -202,19 +202,7 @@ const handleSubmit = async () => {
             <span v-else>Crear cuenta</span>
           </button>
         </form>
-
-        <!-- Divider -->
-        <div class="mt-6">
-          <div class="relative">
-            <div class="absolute inset-0 flex items-center">
-              <div class="w-full border-t border-gray-700"></div>
-            </div>
-            <div class="relative flex justify-center text-sm">
-              <span class="px-2 bg-gray-900 text-gray-400">O continúa con</span>
-            </div>
-          </div>
-        </div>
-
+        
         <!-- Login Link -->
         <div class="mt-6 text-center">
           <p class="text-sm text-gray-400">
@@ -245,7 +233,6 @@ const handleSubmit = async () => {
 .input-field {
   width: 100%;
   padding: 0.75rem 2.5rem;
-  margin: 0.4rem 0;
   background-color: #1f2937;
   border: 1px solid #374151;
   border-radius: 0.5rem;

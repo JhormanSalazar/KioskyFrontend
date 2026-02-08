@@ -5,7 +5,7 @@ import {
   Package,
   FolderOpen,
   Edit3,
-  Settings,
+  UserCog,
   SquareUserRound
 } from 'lucide-vue-next'
 import { useUserStore } from '@/stores/user'
@@ -37,7 +37,7 @@ const menuItems = [
   },
   {
     name: 'Configuración',
-    icon: Settings,
+    icon: UserCog,
     path: '/configuracion'
   }
 ]
@@ -59,7 +59,7 @@ const handleLogout = () => {
   <div class="sidebar h-screen w-64 bg-gray-900 text-white flex flex-col fixed left-0 top-0 z-40">
     <!-- Header -->
     <div class="p-6 px-4 border-b border-gray-700">
-      <div class="flex items-center space-x-3">
+      <div class="flex items-center space-x-2">
         <div>
           <h1 class="text-lg font-semibold text-amber-200">Kiosky</h1>
           <p class="text-sm text-gray-400">Panel de Administración</p>
@@ -69,10 +69,10 @@ const handleLogout = () => {
 
     <!-- Navigation Menu -->
     <nav class="flex-1 px-4 py-6">
-      <ul class="space-y-2">
+      <ul class="space-y-1">
         <li v-for="item in menuItems" :key="item.path">
           <button @click="navigateTo(item.path)" :class="[
-            'w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors duration-200 gap-1',
+            'w-full flex items-center space-x-0.5 px-4 py-3 rounded-lg text-left transition-colors duration-200 gap-1',
             isActiveRoute(item.path)
               ? 'bg-gray-800 text-amber-200 shadow-sm'
               : 'text-gray-300 hover:bg-gray-800 hover:text-white'

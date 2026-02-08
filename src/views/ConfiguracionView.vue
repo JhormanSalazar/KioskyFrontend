@@ -147,36 +147,36 @@ onMounted(async () => {
 
 <template>
   <div class="configuracion-view">
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Configuración</h1>
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">Configuración</h2>
       <p class="text-gray-600">Ajusta la configuración de tu tienda y cuenta.</p>
     </div>
 
     <div class="flex flex-col gap-8">
       <!-- Perfil -->
       <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Perfil</h2>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">Perfil</h2>
         <div v-if="userInfo">
           <div class="form-field">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
+            <label class="block text-sm font-medium text-gray-700">Nombre completo</label>
             <input v-model="userInfo.fullName" type="text"
               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-200 focus:border-transparent"
               placeholder="Tu nombre" :disabled="userStore.userLoading">
           </div>
           <div class="form-field">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label class="block text-sm font-medium text-gray-700">Email</label>
             <input v-model="userInfo.email" type="email"
               class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
               placeholder="tu@email.com" disabled>
             <p class="mt-1 text-xs text-gray-500">El email no se puede modificar</p>
           </div>
           <div class="form-field">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Rol</label>
+            <label class="block text-sm font-medium text-gray-700">Rol</label>
             <input :value="userInfo.role" type="text" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50"
               disabled>
           </div>
           <div class="form-field">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nueva Contraseña</label>
+            <label class="block text-sm font-medium text-gray-700">Nueva Contraseña</label>
             <input v-model="newPassword" type="password"
               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-200 focus:border-transparent"
               placeholder="Dejar en blanco para no cambiar" :disabled="userStore.userLoading">
@@ -197,13 +197,13 @@ onMounted(async () => {
         <h2 class="text-xl font-semibold text-gray-900 mb-4">Configuración de Tienda</h2>
         <div v-if="storeInfo">
           <div class="form-field">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la tienda</label>
+            <label class="block text-sm font-medium text-gray-700">Nombre de la tienda</label>
             <input v-model="storeInfo.name" type="text"
               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-200 focus:border-transparent"
               placeholder="Mi Tienda">
           </div>
           <div class="form-field">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Dominio</label>
+            <label class="block text-sm font-medium text-gray-700">Dominio</label>
             <input v-model="storeInfo.domain" type="text"
               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-200 focus:border-transparent"
               placeholder="mitienda.kiosky.com">
@@ -236,14 +236,7 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-/* Espaciado entre campos del formulario */
-.configuracion-view input,
-.configuracion-view button[type="submit"],
-.configuracion-view button[class*="bg-amber"] {
-  margin-top: 0.5rem;
-}
-
-.configuracion-view .form-field {
+.form-field {
   margin-bottom: 0.5rem;
 }
 </style>

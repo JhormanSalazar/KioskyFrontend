@@ -7,7 +7,7 @@
       >
         <!-- Backdrop -->
         <div
-          class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"
+          class="absolute inset-0 backdrop-blur-sm"
           @click="handleCancel"
         />
 

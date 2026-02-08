@@ -2,7 +2,7 @@
 
 </script>
 <template>
-  <footer class="my-bg text-gray-400 py-6 mt-12">
+  <footer class="my-bg text-gray-400 py-6">
     <div class="container mx-auto px-4 text-center">
       <p>&copy; 2024 Kiosky. Todos los derechos reservados.</p>
       <p>

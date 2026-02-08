@@ -83,17 +83,17 @@ const handleSubmit = async () => {
   <div class="login-container min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full">
       <!-- Header -->
-      <div class="text-center mb-8">
+      <div class="text-center mb-2">
         <h2 class="text-4xl font-bold text-gray-100 mb-2">Iniciar sesión</h2>
         <p class="text-gray-400 text-lg">Accede a tu cuenta de Kiosky</p>
       </div>
 
       <!-- Form Card -->
       <div class="bg-gray-900 rounded-lg shadow-xl p-8 border border-gray-800">
-        <form @submit.prevent="handleSubmit" class="space-y-6">
+        <form @submit.prevent="handleSubmit" class="space-y-4">
           <!-- Email -->
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
+            <label for="email" class="block text-sm font-medium text-gray-300 mb-0.5">
               Correo electrónico
             </label>
             <div class="relative">
@@ -108,7 +108,7 @@ const handleSubmit = async () => {
 
           <!-- Password -->
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
+            <label for="password" class="block text-sm font-medium text-gray-300 mb-0.5">
               Contraseña
             </label>
             <div class="relative">
@@ -194,7 +194,6 @@ const handleSubmit = async () => {
 .input-field {
   width: 100%;
   padding: 0.75rem 2.5rem;
-  margin: 0.4rem 0;
   background-color: #1f2937;
   border: 1px solid #374151;
   border-radius: 0.5rem;
