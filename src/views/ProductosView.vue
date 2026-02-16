@@ -8,6 +8,7 @@ import BaseInput from '@/components/ui/BaseInput.vue'
 import { productService, categoryService } from '@/api/services'
 import { useUserStore } from '@/stores/user'
 import { useNotifications } from '@/composables/useNotifications'
+import { useApi, useApiMutation } from '@/composables/useApi'
 import type { ProductResponse, CreateProductRequest, UpdateProductRequest, CategoryResponse } from '@/types/api.types'
 import type { TableColumn } from '@/components/ui/DataTable.vue'
 
@@ -27,16 +28,56 @@ import type { TableColumn } from '@/components/ui/DataTable.vue'
 const userStore = useUserStore()
 const { success, error: notifyError, confirm } = useNotifications()
 
-// Estado de datos
-const products = ref<ProductResponse[]>([])
-const categories = ref<CategoryResponse[]>([])
-const loading = ref(false)
-const loadError = ref<string | null>(null)
+// Obtener storeId del usuario actual
+const storeId = computed(() => userStore.currentUser?.storeId)
+
+// ============================================
+// API Queries - Carga de datos con useApi
+// ============================================
+const {
+  data: products,
+  loading: loadingProducts,
+  execute: fetchProducts
+} = useApi<ProductResponse[], [number]>(productService.getByStoreId)
+
+const {
+  data: categories,
+  loading: loadingCategories,
+  execute: fetchCategories
+} = useApi<CategoryResponse[], [number]>(categoryService.getByStoreId)
+
+// Loading combinado para la tabla
+const loading = computed(() => loadingProducts.value || loadingCategories.value)
+
+// ============================================
+// API Mutations - Operaciones de escritura
+// ============================================
+const {
+  mutate: createProduct,
+  loading: creating
+} = useApiMutation<ProductResponse, [CreateProductRequest]>(productService.create)
+
+const {
+  mutate: updateProduct,
+  loading: updating
+} = useApiMutation<ProductResponse, [number, UpdateProductRequest]>(productService.update)
+
+const {
+  mutate: deleteProduct,
+  loading: deleting
+} = useApiMutation<void, [number]>(productService.delete)
+
+const {
+  mutate: toggleProductVisibility,
+  loading: togglingVisibility
+} = useApiMutation<ProductResponse, [number, boolean]>(productService.toggleVisibility)
+
+// Loading combinado para el modal de guardar
+const savingProduct = computed(() => creating.value || updating.value)
 
 // Estado del modal
 const showModal = ref(false)
 const modalMode = ref<'create' | 'edit'>('create')
-const savingProduct = ref(false)
 const currentProductId = ref<number | null>(null)
 
 // Formulario
@@ -59,9 +100,6 @@ const formErrors = ref({
   categoryId: '',
   images: ''
 })
-
-// Obtener storeId del usuario actual
-const storeId = computed(() => userStore.currentUser?.storeId)
 
 /**
  * Definición de columnas para la tabla
@@ -106,23 +144,15 @@ const loadProducts = async () => {
     return
   }
 
-  loading.value = true
-  loadError.value = null
+  // Cargar productos y categorías en paralelo usando la desestructuración de arrays
+  const [productsResult, categoriesResult] = await Promise.all([
+    fetchProducts(storeId.value),
+    fetchCategories(storeId.value)
+  ])
 
-  try {
-    const [productsData, categoriesData] = await Promise.all([
-      productService.getByStoreId(storeId.value),
-      categoryService.getByStoreId(storeId.value)
-    ])
-
-    products.value = productsData
-    categories.value = categoriesData
-  } catch (err: any) {
-    loadError.value = err.message || 'Error al cargar los datos'
-    notifyError(loadError.value)
-    products.value = []
-  } finally {
-    loading.value = false
+  // Luego verificamos los resultados y mostramos error si alguno falló
+  if (!productsResult || !categoriesResult) {
+    notifyError('Error al cargar los datos')
   }
 }
 
@@ -190,7 +220,7 @@ const checkSlugExists = async (): Promise<boolean> => {
     const exists = await productService.slugExists(storeId.value, form.value.slug)
 
     if (modalMode.value === 'edit') {
-      const currentProduct = products.value.find(p => p.id === currentProductId.value)
+      const currentProduct = products.value?.find(p => p.id === currentProductId.value)
       if (currentProduct && currentProduct.slug === form.value.slug) {
         return false
       }
@@ -206,7 +236,7 @@ const checkSlugExists = async (): Promise<boolean> => {
  * Abrir modal para crear producto
  */
 const handleCreate = () => {
-  if (categories.value.length === 0) {
+  if (!categories.value || categories.value.length === 0) {
     notifyError('Debes crear al menos una categoría antes de agregar productos')
     return
   }
@@ -263,48 +293,54 @@ const handleSubmit = async () => {
     return
   }
 
-  savingProduct.value = true
+  // Filtrar imágenes vacías
+  const validImages = form.value.images.filter(img => img.trim() !== '')
 
-  try {
-    // Filtrar imágenes vacías
-    const validImages = form.value.images.filter(img => img.trim() !== '')
+  let result: ProductResponse | null = null
 
-    if (modalMode.value === 'create') {
-      const newProduct: CreateProductRequest = {
-        name: form.value.name.trim(),
-        slug: form.value.slug.trim(),
-        price: form.value.price,
-        description: form.value.description.trim() || undefined,
-        categoryId: form.value.categoryId,
-        storeId: storeId.value,
-        isVisible: form.value.isVisible,
-        images: validImages.length > 0 ? validImages : undefined,
-        attributes: form.value.attributes.trim() || undefined
-      }
-      await productService.create(newProduct)
+  if (modalMode.value === 'create') {
+    const newProduct: CreateProductRequest = {
+      name: form.value.name.trim(),
+      slug: form.value.slug.trim(),
+      price: form.value.price,
+      description: form.value.description.trim() || undefined,
+      categoryId: form.value.categoryId,
+      storeId: storeId.value,
+      isVisible: form.value.isVisible,
+      images: validImages.length > 0 ? validImages : undefined,
+      attributes: form.value.attributes.trim() || undefined
+    }
+    result = await createProduct(newProduct)
+
+    if (result) {
       success('Producto creado exitosamente')
     } else {
-      const updateData: UpdateProductRequest = {
-        name: form.value.name.trim(),
-        slug: form.value.slug.trim(),
-        price: form.value.price,
-        description: form.value.description.trim() || undefined,
-        categoryId: form.value.categoryId,
-        isVisible: form.value.isVisible,
-        images: validImages.length > 0 ? validImages : undefined,
-        attributes: form.value.attributes.trim() || undefined
-      }
-      await productService.update(currentProductId.value!, updateData)
-      success('Producto actualizado exitosamente')
+      notifyError('Error al crear el producto')
+      return
     }
+  } else {
+    const updateData: UpdateProductRequest = {
+      name: form.value.name.trim(),
+      slug: form.value.slug.trim(),
+      price: form.value.price,
+      description: form.value.description.trim() || undefined,
+      categoryId: form.value.categoryId,
+      isVisible: form.value.isVisible,
+      images: validImages.length > 0 ? validImages : undefined,
+      attributes: form.value.attributes.trim() || undefined
+    }
+    result = await updateProduct(currentProductId.value!, updateData)
 
-    showModal.value = false
-    await loadProducts()
-  } catch (err: any) {
-    notifyError(err.response?.data?.message || 'Error al guardar el producto')
-  } finally {
-    savingProduct.value = false
+    if (result) {
+      success('Producto actualizado exitosamente')
+    } else {
+      notifyError('Error al actualizar el producto')
+      return
+    }
   }
+
+  showModal.value = false
+  await loadProducts()
 }
 
 /**
@@ -315,12 +351,15 @@ const handleDelete = (product: ProductResponse) => {
     'Eliminar Producto',
     `¿Estás seguro de que deseas eliminar el producto "${product.name}"? Esta acción no se puede deshacer.`,
     async () => {
-      try {
-        await productService.delete(product.id)
+      const result = await deleteProduct(product.id)
+
+      // deleteProduct devuelve null tanto en éxito (void) como en error
+      // Verificamos que no haya error activo
+      if (result === null && !deleting.value) {
         success('Producto eliminado exitosamente')
         await loadProducts()
-      } catch (err: any) {
-        notifyError(err.response?.data?.message || 'Error al eliminar el producto')
+      } else {
+        notifyError('Error al eliminar el producto')
       }
     },
     {
@@ -335,11 +374,12 @@ const handleDelete = (product: ProductResponse) => {
  * Cambiar visibilidad de un producto
  */
 const toggleVisibility = async (product: ProductResponse) => {
-  try {
-    await productService.toggleVisibility(product.id, !product.isVisible)
+  const result = await toggleProductVisibility(product.id, !product.isVisible)
+
+  if (result) {
     success(`Producto ${!product.isVisible ? 'mostrado' : 'ocultado'} exitosamente`)
     await loadProducts()
-  } catch (err: any) {
+  } else {
     notifyError('Error al cambiar la visibilidad del producto')
   }
 }
@@ -387,7 +427,7 @@ onMounted(() => {
 <template>
   <div class="productos-view">
     <!-- Tabla de productos -->
-    <DataTable title="Productos" subtitle="Gestiona tu inventario de productos" :columns="columns" :items="products"
+    <DataTable title="Productos" subtitle="Gestiona tu inventario de productos" :columns="columns" :items="products ?? []"
       :loading="loading" :empty-icon="Package" empty-message="No hay productos"
       empty-subtext="Comienza agregando tu primer producto a la tienda" create-button-text="Agregar Producto"
       @create="handleCreate" @edit="handleEdit" @delete="handleDelete">
@@ -396,7 +436,9 @@ onMounted(() => {
         <div class="flex items-center justify-end space-x-2">
           <button @click="toggleVisibility(item)"
             :class="item.isVisible ? 'text-green-600 hover:text-green-900' : 'text-gray-400 hover:text-gray-600'"
-            :title="item.isVisible ? 'Ocultar producto' : 'Mostrar producto'" class="transition-colors">
+            :title="item.isVisible ? 'Ocultar producto' : 'Mostrar producto'"
+            class="transition-colors"
+            :disabled="togglingVisibility">
             <Eye v-if="item.isVisible" class="h-5 w-5" />
             <EyeOff v-else class="h-5 w-5" />
           </button>
@@ -407,7 +449,7 @@ onMounted(() => {
             </svg>
           </button>
           <button @click="handleDelete(item)" class="text-red-600 hover:text-red-900 transition-colors"
-            title="Eliminar">
+            title="Eliminar" :disabled="deleting">
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
