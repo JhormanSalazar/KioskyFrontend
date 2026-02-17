@@ -1,17 +1,14 @@
 <template>
   <div class="data-table">
     <!-- Header con título y botón de acción -->
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center justify-between mb-6 bg-gray-900 rounded-lg p-4 border border-gray-700">
       <div>
         <h2 class="text-2xl font-bold text-amber-200">{{ title }}</h2>
-        <p v-if="subtitle" class="text-sm text-gray-800 mt-1 ml-0.5">{{ subtitle }}</p>
+        <p v-if="subtitle" class="text-sm text-gray-400 mt-1 ml-0.5">{{ subtitle }}</p>
       </div>
 
-      <button
-        v-if="showCreateButton"
-        @click="$emit('create')"
-        class="flex items-center space-x-2 px-4 py-2 bg-amber-200 text-gray-900 text-sm rounded-md hover:bg-amber-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2"
-      >
+      <button v-if="showCreateButton" @click="$emit('create')"
+        class="flex items-center space-x-2 px-4 py-2 bg-amber-200 text-gray-900 text-sm font-medium rounded-md hover:bg-amber-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 focus:ring-offset-gray-900">
         <Plus class="h-5 w-5" />
         <span>{{ createButtonText }}</span>
       </button>
@@ -20,113 +17,76 @@
     <!-- Barra de búsqueda (opcional) -->
     <div v-if="searchable" class="mb-4">
       <div class="relative">
-        <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-        <input
-          type="text"
-          :value="searchQuery"
+        <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
+        <input type="text" :value="searchQuery"
           @input="$emit('update:searchQuery', ($event.target as HTMLInputElement).value)"
           :placeholder="searchPlaceholder"
-          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent"
-        />
+          class="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-600 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent" />
       </div>
     </div>
 
     <!-- Estado de carga -->
-    <div v-if="loading" class="bg-white rounded-lg shadow p-8 text-center">
+    <div v-if="loading" class="bg-gray-900 rounded-lg border border-gray-700 p-8 text-center">
       <div class="flex justify-center">
         <LoadingSpinner :size="65" />
       </div>
-      <p class="mt-4 text-gray-600">Cargando datos...</p>
+      <p class="mt-4 text-gray-400">Cargando datos...</p>
     </div>
 
     <!-- Estado sin datos -->
-    <div v-else-if="!items || items.length === 0" class="bg-white rounded-lg shadow p-8 text-center">
-      <component
-        :is="emptyIcon"
-        class="h-12 w-12 text-gray-400 mx-auto mb-4"
-      />
-      <p class="text-gray-600 font-medium">{{ emptyMessage }}</p>
+    <div v-else-if="!items || items.length === 0" class="bg-gray-900 rounded-lg border border-gray-700 p-8 text-center">
+      <component :is="emptyIcon" class="h-12 w-12 text-gray-500 mx-auto mb-4" />
+      <p class="text-gray-300 font-medium">{{ emptyMessage }}</p>
       <p class="text-sm text-gray-500 mt-2">{{ emptySubtext }}</p>
-      <button
-        v-if="showCreateButton"
-        @click="$emit('create')"
-        class="mt-4 px-4 py-2 bg-amber-200 text-gray-900 font-medium rounded-md hover:bg-amber-300 transition-colors"
-      >
+      <button v-if="showCreateButton" @click="$emit('create')"
+        class="mt-4 px-4 py-2 bg-amber-200 text-gray-900 font-medium rounded-md hover:bg-amber-300 transition-colors">
         {{ createButtonText }}
       </button>
     </div>
 
     <!-- Tabla de datos -->
-    <div v-else class="bg-white rounded-lg shadow overflow-hidden">
+    <div v-else class="bg-gray-900 rounded-lg border border-gray-700 overflow-hidden">
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
+        <table class="min-w-full divide-y divide-gray-700">
+          <thead class="bg-gray-800">
             <tr>
-              <th
-                v-for="column in columns"
-                :key="column.key"
-                scope="col"
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                :class="column.headerClass"
-              >
+              <th v-for="column in columns" :key="column.key" scope="col"
+                class="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider"
+                :class="column.headerClass">
                 {{ column.label }}
               </th>
-              <th
-                v-if="hasActions"
-                scope="col"
-                class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
+              <th v-if="hasActions" scope="col"
+                class="px-6 py-3 text-right text-xs font-semibold text-gray-300 uppercase tracking-wider">
                 Acciones
               </th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr
-              v-for="(item, index) in items"
-              :key="getItemKey(item, index)"
-              class="hover:bg-gray-50 transition-colors duration-150"
-            >
+          <tbody class="bg-gray-900 divide-y divide-gray-800">
+            <tr v-for="(item, index) in items" :key="getItemKey(item, index)"
+              class="hover:bg-gray-800/50 transition-colors duration-150">
               <!-- Renderizado de columnas -->
-              <td
-                v-for="column in columns"
-                :key="column.key"
-                class="px-6 py-4 whitespace-nowrap"
-                :class="column.cellClass"
-              >
+              <td v-for="column in columns" :key="column.key" class="px-6 py-4 whitespace-nowrap text-gray-200"
+                :class="column.cellClass">
                 <!-- Slot personalizado para la columna si existe -->
-                <slot
-                  :name="`cell-${column.key}`"
-                  :item="item"
-                  :value="getNestedValue(item, column.key)"
-                >
+                <slot :name="`cell-${column.key}`" :item="item" :value="getNestedValue(item, column.key)">
                   <!-- Renderizado por defecto -->
-                  <span
-                    v-if="column.format"
-                    v-html="column.format(getNestedValue(item, column.key), item)"
-                  ></span>
+                  <span v-if="column.format" v-html="column.format(getNestedValue(item, column.key), item)"></span>
                   <span v-else>{{ getNestedValue(item, column.key) }}</span>
                 </slot>
               </td>
 
               <!-- Columna de acciones -->
-              <td
-                v-if="hasActions"
-                class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-              >
+              <td v-if="hasActions" class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                 <slot name="actions" :item="item">
                   <div class="flex items-center justify-end space-x-2">
-                    <button
-                      @click="$emit('edit', item)"
-                      class="text-blue-600 hover:text-blue-900 transition-colors"
-                      title="Editar"
-                    >
+                    <button @click="$emit('edit', item)"
+                      class="text-blue-400 hover:text-blue-300 transition-colors p-1.5 rounded-md hover:bg-gray-700"
+                      title="Editar">
                       <Pencil class="h-5 w-5" />
                     </button>
-                    <button
-                      @click="$emit('delete', item)"
-                      class="text-red-600 hover:text-red-900 transition-colors"
-                      title="Eliminar"
-                    >
+                    <button @click="$emit('delete', item)"
+                      class="text-red-400 hover:text-red-300 transition-colors p-1.5 rounded-md hover:bg-gray-700"
+                      title="Eliminar">
                       <Trash2 class="h-5 w-5" />
                     </button>
                   </div>
@@ -138,12 +98,9 @@
       </div>
 
       <!-- Footer con información de paginación (opcional) -->
-      <div
-        v-if="showFooter"
-        class="bg-gray-50 px-6 py-3 border-t border-gray-200 flex items-center justify-between"
-      >
-        <div class="text-sm text-gray-600">
-          Mostrando <span class="font-medium">{{ items.length }}</span>
+      <div v-if="showFooter" class="bg-gray-800 px-6 py-3 border-t border-gray-700 flex items-center justify-between">
+        <div class="text-sm text-gray-400">
+          Mostrando <span class="font-medium text-gray-200">{{ items.length }}</span>
           {{ items.length === 1 ? 'registro' : 'registros' }}
         </div>
         <slot name="footer"></slot>
@@ -258,7 +215,9 @@ const getNestedValue = (obj: any, path: string): any => {
 <style scoped>
 /* Animación para el estado de carga */
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-spin {

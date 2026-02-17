@@ -108,17 +108,17 @@ const columns: TableColumn[] = [
   {
     key: 'name',
     label: 'Producto',
-    cellClass: 'text-sm font-medium text-gray-900'
+    cellClass: 'text-sm font-medium text-gray-100'
   },
   {
     key: 'categoryName',
     label: 'Categoría',
-    cellClass: 'text-sm text-gray-600'
+    cellClass: 'text-sm text-gray-400'
   },
   {
     key: 'price',
     label: 'Precio',
-    cellClass: 'text-sm text-gray-900 font-semibold',
+    cellClass: 'text-sm text-amber-200 font-semibold',
     format: (value: number) => {
       return `$${value.toFixed(2)}`
     }
@@ -129,8 +129,8 @@ const columns: TableColumn[] = [
     cellClass: 'text-sm',
     format: (value: boolean) => {
       return value
-        ? '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Visible</span>'
-        : '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Oculto</span>'
+        ? '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900/50 text-green-400 border border-green-700">Visible</span>'
+        : '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-700 text-gray-300">Oculto</span>'
     }
   }
 ]
@@ -427,25 +427,27 @@ onMounted(() => {
 <template>
   <div class="productos-view">
     <!-- Tabla de productos -->
-    <DataTable title="Productos" subtitle="Gestiona tu inventario de productos" :columns="columns" :items="products ?? []"
-      :loading="loading" :empty-icon="Package" empty-message="No hay productos"
+    <DataTable title="Productos" subtitle="Gestiona tu inventario de productos" :columns="columns"
+      :items="products ?? []" :loading="loading" :empty-icon="Package" empty-message="No hay productos"
       empty-subtext="Comienza agregando tu primer producto a la tienda" create-button-text="Agregar Producto"
       @create="handleCreate" @edit="handleEdit" @delete="handleDelete">
       <!-- Slot personalizado para acciones -->
       <template #actions="{ item }">
         <div class="flex items-center justify-end space-x-2">
           <button @click="toggleVisibility(item)"
-            :class="item.isVisible ? 'text-green-600 hover:text-green-900' : 'text-gray-400 hover:text-gray-600'"
+            :class="item.isVisible ? 'text-green-400 hover:text-green-300' : 'text-gray-500 hover:text-gray-400'"
             :title="item.isVisible ? 'Ocultar producto' : 'Mostrar producto'"
-            class="transition-colors"
-            :disabled="togglingVisibility">
+            class="transition-colors p-1.5 rounded-md hover:bg-gray-700" :disabled="togglingVisibility">
             <Eye v-if="item.isVisible" class="h-5 w-5" />
             <EyeOff v-else class="h-5 w-5" />
           </button>
-          <button @click="handleEdit(item)" class="text-blue-600 hover:text-blue-900 transition-colors" title="Editar">
-              <Pencil class="h-5 w-5" />
+          <button @click="handleEdit(item)"
+            class="text-blue-400 hover:text-blue-300 transition-colors p-1.5 rounded-md hover:bg-gray-700"
+            title="Editar">
+            <Pencil class="h-5 w-5" />
           </button>
-          <button @click="handleDelete(item)" class="text-red-600 hover:text-red-900 transition-colors"
+          <button @click="handleDelete(item)"
+            class="text-red-400 hover:text-red-300 transition-colors p-1.5 rounded-md hover:bg-gray-700"
             title="Eliminar" :disabled="deleting">
             <Trash2 class="h-5 w-5" />
           </button>

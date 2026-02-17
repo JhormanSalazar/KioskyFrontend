@@ -150,9 +150,12 @@ onMounted(async () => {
 
 <template>
   <div class="configuracion-view">
-    <div class="mb-6">
-      <h2 class="text-2xl font-bold text-gray-100 mb-2">Configuración</h2>
-      <p class="text-gray-400">Ajusta la configuración de tu tienda y cuenta.</p>
+    <!-- Header con título -->
+    <div class="flex items-center justify-between mb-6 bg-gray-900 rounded-lg p-4 border border-gray-700">
+      <div>
+        <h2 class="text-2xl font-bold text-amber-200">Configuración</h2>
+        <p class="text-sm text-gray-400 mt-1 ml-0.5">Ajusta la configuración de tu perfil y tienda</p>
+      </div>
     </div>
 
     <div class="flex flex-col gap-8">

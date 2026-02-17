@@ -59,21 +59,20 @@ const columns: TableColumn[] = [
   {
     key: 'name',
     label: 'Nombre',
-    cellClass: 'text-sm font-medium text-gray-900'
+    cellClass: 'text-sm font-medium text-gray-100'
   },
   {
     key: 'slug',
     label: 'Slug',
-    cellClass: 'text-sm text-gray-600 font-mono'
+    cellClass: 'text-sm text-gray-400 font-mono'
   },
   {
     key: 'productCount',
     label: 'Productos',
-    cellClass: 'text-sm text-gray-600',
+    cellClass: 'text-sm',
     format: (value: number) => {
-      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-        value > 0 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-      }">${value} ${value === 1 ? 'producto' : 'productos'}</span>`
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${value > 0 ? 'bg-green-900/50 text-green-400 border border-green-700' : 'bg-gray-700 text-gray-300'
+        }">${value} ${value === 1 ? 'producto' : 'productos'}</span>`
     }
   }
 ]
@@ -273,8 +272,8 @@ const handleDelete = (category: CategoryResponse) => {
  */
 const isFormValid = computed(() => {
   return form.value.name.trim().length >= 2 &&
-         form.value.slug.trim().length >= 2 &&
-         /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(form.value.slug)
+    form.value.slug.trim().length >= 2 &&
+    /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(form.value.slug)
 })
 
 // Watch para generar slug automáticamente cuando se escribe el nombre
@@ -294,62 +293,27 @@ onMounted(() => {
 <template>
   <div class="categorias-view">
     <!-- Tabla de categorías -->
-    <DataTable
-      title="Categorías"
-      subtitle="Organiza tus productos en categorías"
-      :columns="columns"
-      :items="categories"
-      :loading="loading"
-      :empty-icon="FolderOpen"
-      empty-message="No hay categorías"
-      empty-subtext="Crea tu primera categoría para organizar tus productos"
-      create-button-text="Agregar Categoría"
-      @create="handleCreate"
-      @edit="handleEdit"
-      @delete="handleDelete"
-    />
+    <DataTable title="Categorías" subtitle="Organiza tus productos en categorías" :columns="columns" :items="categories"
+      :loading="loading" :empty-icon="FolderOpen" empty-message="No hay categorías"
+      empty-subtext="Crea tu primera categoría para organizar tus productos" create-button-text="Agregar Categoría"
+      @create="handleCreate" @edit="handleEdit" @delete="handleDelete" />
 
     <!-- Modal de crear/editar categoría -->
-    <FormModal
-      v-model:isOpen="showModal"
-      :title="modalMode === 'create' ? 'Crear Categoría' : 'Editar Categoría'"
-      :icon="FolderPlus"
-      :loading="savingCategory"
-      :is-valid="isFormValid"
-      submit-text="Guardar"
-      @submit="handleSubmit"
-    >
+    <FormModal v-model:isOpen="showModal" :title="modalMode === 'create' ? 'Crear Categoría' : 'Editar Categoría'"
+      :icon="FolderPlus" :loading="savingCategory" :is-valid="isFormValid" submit-text="Guardar" @submit="handleSubmit">
       <!-- Nombre de la categoría -->
-      <FormField
-        label="Nombre de la categoría"
-        required
-        :error="formErrors.name"
-        description="Nombre descriptivo para tu categoría de productos"
-      >
-        <BaseInput
-          v-model="form.name"
-          type="text"
-          placeholder="Ej: Electrónica, Ropa, Alimentos..."
-          :has-error="!!formErrors.name"
-          autocomplete="off"
-        />
+      <FormField label="Nombre de la categoría" required :error="formErrors.name"
+        description="Nombre descriptivo para tu categoría de productos">
+        <BaseInput v-model="form.name" type="text" placeholder="Ej: Electrónica, Ropa, Alimentos..."
+          :has-error="!!formErrors.name" autocomplete="off" />
       </FormField>
 
       <!-- Slug -->
-      <FormField
-        label="Slug"
-        required
-        :error="formErrors.slug"
+      <FormField label="Slug" required :error="formErrors.slug"
         description="URL amigable (solo letras minúsculas, números y guiones)"
-        hint="Se genera automáticamente desde el nombre, pero puedes personalizarlo"
-      >
-        <BaseInput
-          v-model="form.slug"
-          type="text"
-          placeholder="ej: electronica"
-          :has-error="!!formErrors.slug"
-          autocomplete="off"
-        />
+        hint="Se genera automáticamente desde el nombre, pero puedes personalizarlo">
+        <BaseInput v-model="form.slug" type="text" placeholder="ej: electronica" :has-error="!!formErrors.slug"
+          autocomplete="off" />
       </FormField>
 
       <!-- Preview del slug -->
