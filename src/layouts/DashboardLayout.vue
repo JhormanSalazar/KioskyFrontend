@@ -19,6 +19,6 @@ import Sidebar from '@/components/layout/Sidebar.vue'
 
 <style scoped>
 .dashboard-layout {
-  background-color: #f8fafc;
+  background-color: #F9FAFB;
 }
 </style>

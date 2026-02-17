@@ -3,8 +3,8 @@
     <!-- Header con título y botón de acción -->
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h2 class="text-2xl font-bold text-gray-900">{{ title }}</h2>
-        <p v-if="subtitle" class="text-sm text-gray-600 mt-1">{{ subtitle }}</p>
+        <h2 class="text-2xl font-bold text-amber-200">{{ title }}</h2>
+        <p v-if="subtitle" class="text-sm text-gray-800 mt-1 ml-0.5">{{ subtitle }}</p>
       </div>
 
       <button
@@ -153,7 +153,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { Plus, Search, Pencil, Trash2, Package } from 'lucide-vue-next'
 import LoadingSpinner from '@/components/ui/LoadingSpinner.vue'
 
@@ -196,7 +195,7 @@ const props = withDefaults(defineProps<{
   title: string                        // Título de la tabla
   subtitle?: string                    // Subtítulo opcional
   columns: TableColumn[]               // Definición de columnas
-  items: any[]                         // Array de datos a mostrar
+  items: unknown[]                         // Array de datos a mostrar
   loading?: boolean                    // Estado de carga
   itemKey?: string                     // Campo a usar como key (default: 'id')
 
@@ -215,7 +214,7 @@ const props = withDefaults(defineProps<{
   // Estado vacío
   emptyMessage?: string                // Mensaje cuando no hay datos
   emptySubtext?: string                // Subtexto del estado vacío
-  emptyIcon?: any                      // Icono del estado vacío
+  emptyIcon?: unknown                      // Icono del estado vacío
 
   // Footer
   showFooter?: boolean                 // Mostrar footer

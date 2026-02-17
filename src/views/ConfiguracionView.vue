@@ -7,6 +7,8 @@ import type { AppUserResponse, SimpleStoreResponse, UpdateAppUserRequest, Regist
 import { useNotifications } from '@/composables/useNotifications';
 import CreateStoreModal from '@/components/configuration/CreateStoreModal.vue';
 import LoadingSpinner from '@/components/ui/LoadingSpinner.vue';
+import FormField from '@/components/ui/FormField.vue';
+import BaseInput from '@/components/ui/BaseInput.vue';
 
 // ref para los datos de configuración
 const userStore = useUserStore();
@@ -149,74 +151,63 @@ onMounted(async () => {
 <template>
   <div class="configuracion-view">
     <div class="mb-6">
-      <h2 class="text-2xl font-bold text-gray-900 mb-2">Configuración</h2>
-      <p class="text-gray-600">Ajusta la configuración de tu tienda y cuenta.</p>
+      <h2 class="text-2xl font-bold text-gray-100 mb-2">Configuración</h2>
+      <p class="text-gray-400">Ajusta la configuración de tu tienda y cuenta.</p>
     </div>
 
     <div class="flex flex-col gap-8">
       <!-- Perfil -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-2">Perfil</h2>
+      <div class="bg-gray-900 rounded-lg shadow p-6 border border-gray-700">
+        <h2 class="text-xl font-semibold text-amber-200 mb-2">Perfil</h2>
         <div v-if="userInfo">
-          <div class="form-field">
-            <label class="block text-sm font-medium text-gray-700">Nombre completo</label>
-            <input v-model="userInfo.fullName" type="text"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-200 focus:border-transparent"
-              placeholder="Tu nombre" :disabled="userStore.userLoading">
-          </div>
-          <div class="form-field">
-            <label class="block text-sm font-medium text-gray-700">Email</label>
-            <input v-model="userInfo.email" type="email"
-              class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
-              placeholder="tu@email.com" disabled>
-            <p class="mt-1 text-xs text-gray-500">El email no se puede modificar</p>
-          </div>
-          <div class="form-field">
-            <label class="block text-sm font-medium text-gray-700">Rol</label>
-            <input :value="userInfo.role" type="text" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50"
-              disabled>
-          </div>
-          <div class="form-field">
-            <label class="block text-sm font-medium text-gray-700">Nueva Contraseña</label>
-            <input v-model="newPassword" type="password"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-200 focus:border-transparent"
-              placeholder="Dejar en blanco para no cambiar" :disabled="userStore.userLoading">
-            <p class="mt-1 text-xs text-gray-500">Deja este campo vacío si no deseas cambiar tu contraseña</p>
-          </div>
+          <FormField label="Nombre completo" required>
+            <BaseInput v-model="userInfo.fullName" type="text" placeholder="Tu nombre"
+              :disabled="userStore.userLoading" />
+          </FormField>
+
+          <FormField label="Email" hint="El email no se puede modificar">
+            <BaseInput v-model="userInfo.email" type="email" placeholder="tu@email.com" disabled />
+          </FormField>
+
+          <FormField label="Rol">
+            <BaseInput :model-value="userInfo.role" type="text" disabled />
+          </FormField>
+
+          <FormField label="Nueva Contraseña" optional hint="Deja este campo vacío si no deseas cambiar tu contraseña">
+            <BaseInput v-model="newPassword" type="password" placeholder="Dejar en blanco para no cambiar"
+              :disabled="userStore.userLoading" />
+          </FormField>
+
           <button @click="handleUserSubmit" :disabled="!isUserFormValid || userStore.userLoading"
             class="bg-amber-200 text-black text-sm px-4 py-2 rounded-lg hover:bg-amber-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
             <LoadingSpinner v-if="userStore.userLoading" :size="16" color="#000" />
             {{ userStore.userLoading ? 'Guardando...' : 'Guardar Cambios' }}
           </button>
         </div>
-        <div v-else class="py-4 text-gray-500 flex items-center gap-3">
+        <div v-else class="py-4 text-gray-400 flex items-center gap-3">
           <LoadingSpinner :size="30" />
           <span>Cargando información del usuario...</span>
         </div>
       </div>
 
       <!-- Tienda -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Configuración de Tienda</h2>
+      <div class="bg-gray-900 rounded-lg shadow p-6 border border-gray-700">
+        <h2 class="text-xl font-semibold text-amber-200 mb-4">Configuración de Tienda</h2>
         <div v-if="storeInfo">
-          <div class="form-field">
-            <label class="block text-sm font-medium text-gray-700">Nombre de la tienda</label>
-            <input v-model="storeInfo.name" type="text"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-200 focus:border-transparent"
-              placeholder="Mi Tienda">
-          </div>
-          <div class="form-field">
-            <label class="block text-sm font-medium text-gray-700">Dominio</label>
-            <input v-model="storeInfo.domain" type="text"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-200 focus:border-transparent"
-              placeholder="mitienda.kiosky.com">
-          </div>
+          <FormField label="Nombre de la tienda" required>
+            <BaseInput v-model="storeInfo.name" type="text" placeholder="Mi Tienda" />
+          </FormField>
+
+          <FormField label="Dominio" required>
+            <BaseInput v-model="storeInfo.domain" type="text" placeholder="mitienda.kiosky.com" />
+          </FormField>
+
           <button @click="handleStoreSubmit" :disabled="!isStoreFormValid"
             class="bg-amber-200 text-black text-sm px-4 py-2 rounded-lg hover:bg-amber-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
             Actualizar Tienda
           </button>
         </div>
-        <div v-else-if="!userStore.currentUser?.storeId" class="py-4 text-gray-500">
+        <div v-else-if="!userStore.currentUser?.storeId" class="py-4 text-gray-400">
           No tienes una tienda asociada, crea una para configurar sus detalles.
 
           <div>
@@ -226,7 +217,7 @@ onMounted(async () => {
             </button>
           </div>
         </div>
-        <div v-else class="py-4 text-gray-500">
+        <div v-else class="py-4 text-gray-400">
           Cargando información de la tienda...
         </div>
       </div>
@@ -239,7 +230,5 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.form-field {
-  margin-bottom: 0.5rem;
-}
+/* Estilos específicos de la vista de configuración */
 </style>
