@@ -6,6 +6,7 @@ import { storeService } from '@/api/services/store.service';
 import type { AppUserResponse, SimpleStoreResponse, UpdateAppUserRequest, RegisterStoreRequest } from '@/types/api.types';
 import { useNotifications } from '@/composables/useNotifications';
 import CreateStoreModal from '@/components/configuration/CreateStoreModal.vue';
+import LoadingSpinner from '@/components/ui/LoadingSpinner.vue';
 
 // ref para los datos de configuración
 const userStore = useUserStore();
@@ -183,12 +184,14 @@ onMounted(async () => {
             <p class="mt-1 text-xs text-gray-500">Deja este campo vacío si no deseas cambiar tu contraseña</p>
           </div>
           <button @click="handleUserSubmit" :disabled="!isUserFormValid || userStore.userLoading"
-            class="bg-amber-200 text-black text-sm px-4 py-2 rounded-lg hover:bg-amber-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+            class="bg-amber-200 text-black text-sm px-4 py-2 rounded-lg hover:bg-amber-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+            <LoadingSpinner v-if="userStore.userLoading" :size="16" color="#000" />
             {{ userStore.userLoading ? 'Guardando...' : 'Guardar Cambios' }}
           </button>
         </div>
-        <div v-else class="py-4 text-gray-500">
-          Cargando información del usuario...
+        <div v-else class="py-4 text-gray-500 flex items-center gap-3">
+          <LoadingSpinner :size="30" />
+          <span>Cargando información del usuario...</span>
         </div>
       </div>
 

@@ -33,7 +33,9 @@
 
     <!-- Estado de carga -->
     <div v-if="loading" class="bg-white rounded-lg shadow p-8 text-center">
-      <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-amber-200 border-t-transparent"></div>
+      <div class="flex justify-center">
+        <LoadingSpinner :size="65" />
+      </div>
       <p class="mt-4 text-gray-600">Cargando datos...</p>
     </div>
 
@@ -153,6 +155,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { Plus, Search, Pencil, Trash2, Package } from 'lucide-vue-next'
+import LoadingSpinner from '@/components/ui/LoadingSpinner.vue'
 
 /**
  * DataTable - Componente reutilizable para mostrar tablas de datos

@@ -62,7 +62,7 @@
                 :disabled="loading || !isValid"
                 class="px-4 py-2 text-sm font-medium bg-amber-200 text-gray-900 rounded-md hover:bg-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 focus:ring-offset-gray-900 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
               >
-                <span v-if="loading" class="inline-block animate-spin rounded-full h-4 w-4 border-2 border-gray-900 border-t-transparent"></span>
+                <LoadingSpinner v-if="loading" :size="16" color="#1f2937" />
                 <span>{{ loading ? loadingText : submitText }}</span>
               </button>
             </div>
@@ -75,6 +75,7 @@
 
 <script setup lang="ts">
 import { X } from 'lucide-vue-next'
+import LoadingSpinner from '@/components/ui/LoadingSpinner.vue'
 
 /**
  * FormModal - Componente reutilizable para modales de formularios
