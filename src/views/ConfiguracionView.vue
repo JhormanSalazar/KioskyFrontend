@@ -151,7 +151,7 @@ onMounted(async () => {
 <template>
   <div class="configuracion-view">
     <!-- Header con título -->
-    <div class="flex items-center justify-between mb-6 bg-gray-900 rounded-lg p-4 border border-gray-700">
+    <div class="flex items-center justify-between mb-6 bg-gray-900/80 backdrop-blur-sm rounded-lg p-4 border border-gray-700">
       <div>
         <h2 class="text-2xl font-bold text-amber-200">Configuración</h2>
         <p class="text-sm text-gray-400 mt-1 ml-0.5">Ajusta la configuración de tu perfil y tienda</p>
@@ -160,7 +160,7 @@ onMounted(async () => {
 
     <div class="flex flex-col gap-8">
       <!-- Perfil -->
-      <div class="bg-gray-900 rounded-lg shadow p-6 border border-gray-700">
+      <div class="bg-gray-900/80 backdrop-blur-sm rounded-lg shadow p-6 border border-gray-700">
         <h2 class="text-xl font-semibold text-amber-200 mb-2">Perfil</h2>
         <div v-if="userInfo">
           <FormField label="Nombre completo" required>
@@ -194,7 +194,7 @@ onMounted(async () => {
       </div>
 
       <!-- Tienda -->
-      <div class="bg-gray-900 rounded-lg shadow p-6 border border-gray-700">
+      <div class="bg-gray-900/80 backdrop-blur-sm rounded-lg shadow p-6 border border-gray-700">
         <h2 class="text-xl font-semibold text-amber-200 mb-4">Configuración de Tienda</h2>
         <div v-if="storeInfo">
           <FormField label="Nombre de la tienda" required>
