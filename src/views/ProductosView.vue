@@ -64,12 +64,14 @@ const {
 
 const {
   mutate: deleteProduct,
-  loading: deleting
+  loading: deleting,
+  error: deleteError
 } = useApiMutation<void, [number]>(productService.delete)
 
 const {
   mutate: toggleProductVisibility,
-  loading: togglingVisibility
+  loading: togglingVisibility,
+  error: toggleError
 } = useApiMutation<ProductResponse, [number, boolean]>(productService.toggleVisibility)
 
 // Loading combinado para el modal de guardar
@@ -100,6 +102,10 @@ const formErrors = ref({
   categoryId: '',
   images: ''
 })
+
+const clearFormErrors = () => {
+  formErrors.value = { name: '', slug: '', price: '', categoryId: '', images: '' }
+}
 
 /**
  * Definición de columnas para la tabla
@@ -161,7 +167,7 @@ const loadProducts = async () => {
  */
 const validateForm = (): boolean => {
   let isValid = true
-  formErrors.value = { name: '', slug: '', price: '', categoryId: '', images: '' }
+  clearFormErrors()
 
   // Validar nombre
   if (!form.value.name.trim()) {
@@ -253,7 +259,7 @@ const handleCreate = () => {
     images: [''],
     attributes: ''
   }
-  formErrors.value = { name: '', slug: '', price: '', categoryId: '', images: '' }
+  clearFormErrors()
   showModal.value = true
 }
 
@@ -273,7 +279,7 @@ const handleEdit = (product: ProductResponse) => {
     images: product.images && product.images.length > 0 ? product.images : [''],
     attributes: product.attributes || ''
   }
-  formErrors.value = { name: '', slug: '', price: '', categoryId: '', images: '' }
+  clearFormErrors()
   showModal.value = true
 }
 
@@ -351,11 +357,9 @@ const handleDelete = (product: ProductResponse) => {
     'Eliminar Producto',
     `¿Estás seguro de que deseas eliminar el producto "${product.name}"? Esta acción no se puede deshacer.`,
     async () => {
-      const result = await deleteProduct(product.id)
+      await deleteProduct(product.id)
 
-      // deleteProduct devuelve null tanto en éxito (void) como en error
-      // Verificamos que no haya error activo
-      if (result === null && !deleting.value) {
+      if (!deleteError.value) {
         success('Producto eliminado exitosamente')
         await loadProducts()
       } else {
@@ -374,10 +378,11 @@ const handleDelete = (product: ProductResponse) => {
  * Cambiar visibilidad de un producto
  */
 const toggleVisibility = async (product: ProductResponse) => {
-  const result = await toggleProductVisibility(product.id, !product.isVisible)
+  const newVisibility = !product.isVisible
+  await toggleProductVisibility(product.id, newVisibility)
 
-  if (result) {
-    success(`Producto ${!product.isVisible ? 'mostrado' : 'ocultado'} exitosamente`)
+  if (!toggleError.value) {
+    success(`Producto ${newVisibility ? 'mostrado' : 'ocultado'} exitosamente`)
     await loadProducts()
   } else {
     notifyError('Error al cambiar la visibilidad del producto')
@@ -430,7 +435,7 @@ onMounted(() => {
     <DataTable title="Productos" subtitle="Gestiona tu inventario de productos" :columns="columns"
       :items="products ?? []" :loading="loading" :empty-icon="Package" empty-message="No hay productos"
       empty-subtext="Comienza agregando tu primer producto a la tienda" create-button-text="Agregar Producto"
-      @create="handleCreate" @edit="handleEdit" @delete="handleDelete">
+      @create="handleCreate">
       <!-- Slot personalizado para acciones -->
       <template #actions="{ item }">
         <div class="flex items-center justify-end space-x-2">

@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import type { EditorBlock, HeroBlockProps, ProductGridBlockProps, CategoryGridBlockProps, TextBlockProps, DividerBlockProps, BannerBlockProps } from '@/types/editor.types'
 import type { ProductResponse, CategoryResponse } from '@/types/api.types'
-import { Package, FolderOpen, DollarSign } from 'lucide-vue-next'
+import { Package, FolderOpen } from 'lucide-vue-next'
 
 const props = defineProps<{
   block: EditorBlock
