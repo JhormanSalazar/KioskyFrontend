@@ -100,3 +100,6 @@ firebase-adminsdk-*.json
 
 # Auth0 or other auth providers config files
 auth_config.json
+
+# Claude template files
+tmpclaude-*
