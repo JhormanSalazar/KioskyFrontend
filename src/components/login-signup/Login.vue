@@ -94,7 +94,7 @@ const handleSubmit = async () => {
         <form @submit.prevent="handleSubmit" class="space-y-4">
           <!-- Email -->
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-300 mb-0.5">
+            <label for="email" class="block text-sm font-medium text-gray-300">
               Correo electrónico
             </label>
             <div class="relative">
@@ -109,7 +109,7 @@ const handleSubmit = async () => {
 
           <!-- Password -->
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-300 mb-0.5">
+            <label for="password" class="block text-sm font-medium text-gray-300">
               Contraseña
             </label>
             <div class="relative">
@@ -124,7 +124,7 @@ const handleSubmit = async () => {
                 <EyeOff v-else class="h-5 w-5 text-gray-500 hover:text-gray-300" />
               </button>
             </div>
-            <p v-if="errors.password" class="mt-1 text-sm text-red-400">{{ errors.password }}</p>
+            <p v-if="errors.password" class="text-sm text-red-400">{{ errors.password }}</p>
           </div>
 
           <!-- Forgot Password Link -->
@@ -150,7 +150,7 @@ const handleSubmit = async () => {
         </form>
 
         <!-- Divider -->
-        <div class="mt-6">
+        <div class="mt-2">
           <div class="relative">
             <div class="absolute inset-0 flex items-center">
               <div class="w-full border-t border-gray-700"></div>
@@ -162,7 +162,7 @@ const handleSubmit = async () => {
         </div>
 
         <!-- Signup Link -->
-        <div class="mt-6 text-center">
+        <div class="mt-2 text-center">
           <p class="text-sm text-gray-400">
             <router-link to="/signup" class="font-medium text-amber-200 hover:text-amber-100 transition duration-200">
               Crear cuenta nueva

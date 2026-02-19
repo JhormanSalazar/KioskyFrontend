@@ -17,7 +17,7 @@ import DotGrid from '@/components/ui/DotGrid.vue'
 
     <!-- Main Content -->
     <div class="pl-64 min-h-screen relative z-10">
-      <main class="p-6">
+      <main class="p-4">
         <RouterView />
       </main>
     </div>
@@ -26,7 +26,7 @@ import DotGrid from '@/components/ui/DotGrid.vue'
 
 <style scoped>
 .dashboard-layout {
-  background-color: #0f172a;
+  background-color: #0a0a0a;
 }
 
 .dot-grid-container {
