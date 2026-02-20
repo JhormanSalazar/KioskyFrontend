@@ -14,6 +14,8 @@ import { productService, categoryService, storeService } from '@/api/services'
 import CatalogBlockRenderer from '@/components/editor/CatalogBlockRenderer.vue'
 import LoadingSpinner from '@/components/ui/LoadingSpinner.vue'
 
+import type { StoreResponse } from '@/types/api.types'
+
 import {
   BLOCK_DEFINITIONS,
   DEFAULT_CATALOG_LAYOUT,
@@ -40,6 +42,7 @@ const hasUnsavedChanges = ref(false)
 const isSaving = ref(false)
 const activePanel = ref<'blocks' | 'theme'>('blocks')
 
+// Serializamos y deserializamos el layout para romper referencias (reactividad) y evitar mutaciones reactivas no deseadas al clonar bloques o resetear al default. Esto hace que cada bloque tenga su propio objeto de props independiente.
 const layout = ref<CatalogLayout>(JSON.parse(JSON.stringify(DEFAULT_CATALOG_LAYOUT)))
 
 // ─── API ──────────────────────────────────────────────────────────────────────
@@ -47,7 +50,7 @@ const {
   data: products,
   loading: loadingProducts,
   execute: loadProducts,
-} = useApi<ProductResponse[], [number]>(productService.getByStoreId)
+} = useApi<ProductResponse[], [number]>(productService.getByStoreId) // [number] le dice a TypeScript: "La función execute debe llamarse pasando un único número entre los paréntesis"
 
 const {
   data: categories,
@@ -59,7 +62,7 @@ const {
   data: storeData,
   loading: loadingStore,
   execute: loadStore,
-} = useApi<any, [number]>(storeService.getById)
+} = useApi<StoreResponse, [number]>(storeService.getById)
 
 const { mutate: saveTheme, loading: savingTheme } = useApiMutation<any, [number, string]>(
   storeService.updateThemeSettings
@@ -78,11 +81,15 @@ onMounted(async () => {
   // Restore saved layout from themeSettings
   if (storeData.value?.themeSettings) {
     try {
+      // 1. Intenta convertir el string de la DB a un objeto JS
       const parsed = JSON.parse(storeData.value.themeSettings) as CatalogLayout
+
+      // 2. Si el objeto tiene la estructura esperada, lo aplica al editor
       if (parsed?.blocks) {
         layout.value = parsed
       }
     } catch {
+      // 3. Si algo falla, no rompas la app, simplemente usa el layout por defecto
       /* first time or invalid JSON → use default */
     }
   }
@@ -194,7 +201,7 @@ const blockLabel = (type: BlockType) => BLOCK_DEFINITIONS.find((d) => d.type ===
       class="flex items-center justify-between mb-4 bg-gray-900/80 backdrop-blur-sm rounded-lg px-4 py-3 border border-gray-700 shrink-0">
       <div>
         <h2 class="text-xl font-bold text-amber-200 leading-tight">Editor del catálogo</h2>
-        <p class="text-xs text-gray-500 mt-0.5">Arrastra bloques para construir tu catálogo.</p>
+        <p class="text-xs text-gray-300 mt-0.5">Arrastra bloques para construir tu catálogo.</p>
       </div>
 
       <div class="flex items-center gap-2">
@@ -241,7 +248,7 @@ const blockLabel = (type: BlockType) => BLOCK_DEFINITIONS.find((d) => d.type ===
       <!-- Loading overlay -->
       <div v-if="loading" class="flex-1 flex items-center justify-center">
         <div class="flex flex-col items-center gap-3">
-          <LoadingSpinner :size="40" />
+          <LoadingSpinner :size="60" />
           <p class="text-sm text-gray-500">Cargando datos de la tienda...</p>
         </div>
       </div>
