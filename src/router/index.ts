@@ -18,6 +18,16 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue'),
     },
     {
+      path: '/services',
+      name: 'services',
+      component: () => import('../views/ServicesView.vue'),
+    },
+    {
+      path: '/contact',
+      name: 'contact',
+      component: () => import('../views/ContactView.vue'),
+    },
+    {
       path: '/signup',
       name: 'signup',
       component: () => import('../components/login-signup/Signup.vue'),
@@ -65,7 +75,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
 
-  const publicPages = ['/', '/about', '/login', '/signup']
+  const publicPages = ['/', '/about', '/services', '/contact', '/login', '/signup']
   const authRequired = !publicPages.includes(to.path)
 
   const hasToken = authService.isAuthenticated()

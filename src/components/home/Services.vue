@@ -5,7 +5,7 @@ import Cubes from '@/components/ui/Cubes/Cubes.vue'
 </script>
 
 <template>
-  <div class="service-bg py-18 min-h-screen bg-gray-900 relative overflow-hidden">
+  <div class="service-bg py-18 min-h-screen bg-amber-200/10 relative overflow-hidden">
     <!-- Cubes Background -->
     <Cubes class="!absolute !inset-0 w-full h-full z-0 opacity-20" :gridSize="12" :maxAngle="25" :radius="5"
       borderStyle="1px solid #fde68a" faceColor="#1a1a1a" rippleColor="#fde68a" :rippleSpeed="3" :autoAnimate="true"
@@ -38,7 +38,7 @@ import Cubes from '@/components/ui/Cubes/Cubes.vue'
 
 <style scoped>
 .service-bg {
-  background-color: #262626;
+  background-color: #1a1a1a;
   color: #d1d5db;
 }
 

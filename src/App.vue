@@ -9,7 +9,7 @@ import ConfirmationModal from '@/components/ui/ConfirmationModal.vue';
 const route = useRoute()
 
 // Rutas donde se muestra el navbar y footer público
-const publicRoutes = ['home', 'about', 'login', 'signup']
+const publicRoutes = ['home', 'about', 'services', 'contact', 'login', 'signup']
 const isPublicRoute = computed(() => publicRoutes.includes(route.name as string))
 </script>
 
