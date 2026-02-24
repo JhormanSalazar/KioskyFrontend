@@ -1,35 +1,24 @@
 <template>
   <Teleport to="body">
     <Transition name="modal">
-      <div
-        v-if="confirmation"
-        class="fixed inset-0 z-50 flex items-center justify-center"
-      >
+      <div v-if="confirmation" class="fixed inset-0 z-50 flex items-center justify-center">
         <!-- Backdrop -->
-        <div
-          class="absolute inset-0 backdrop-blur-sm"
-          @click="handleCancel"
-        />
+        <div class="absolute inset-0 backdrop-blur-sm" @click="handleCancel" />
 
         <!-- Modal -->
-        <div class="relative bg-gray-900 rounded-lg shadow-xl border border-gray-700 max-w-md w-full mx-4 transform transition-all">
+        <div
+          class="relative bg-[#1a1a1a] rounded-lg shadow-xl border border-gray-700 max-w-md w-full mx-4 transform transition-all">
           <!-- Header -->
           <div class="flex items-center justify-between p-6 border-b border-gray-700">
             <div class="flex items-center space-x-3">
-              <component
-                :is="getIcon(confirmation.type || 'warning')"
-                :class="getIconClasses(confirmation.type || 'warning')"
-                class="h-6 w-6"
-              />
+              <component :is="getIcon(confirmation.type || 'warning')"
+                :class="getIconClasses(confirmation.type || 'warning')" class="h-6 w-6" />
               <h3 class="text-lg font-semibold text-amber-200">
                 {{ confirmation.title }}
               </h3>
             </div>
 
-            <button
-              @click="handleCancel"
-              class="text-gray-400 hover:text-gray-200 transition-colors duration-200"
-            >
+            <button @click="handleCancel" class="text-gray-400 hover:text-gray-200 transition-colors duration-200">
               <X class="h-5 w-5" />
             </button>
           </div>
@@ -43,18 +32,13 @@
 
           <!-- Footer -->
           <div class="flex justify-end space-x-3 p-6 border-t border-gray-700">
-            <button
-              @click="handleCancel"
-              class="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-700 border border-gray-600 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors duration-200"
-            >
+            <button @click="handleCancel"
+              class="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-700 border border-gray-600 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors duration-200">
               {{ confirmation.cancelText || 'Cancelar' }}
             </button>
 
-            <button
-              @click="handleConfirm"
-              :class="getConfirmButtonClasses(confirmation.type || 'warning')"
-              class="px-4 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 transition-colors duration-200"
-            >
+            <button @click="handleConfirm" :class="getConfirmButtonClasses(confirmation.type || 'warning')"
+              class="px-4 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 transition-colors duration-200">
               {{ confirmation.confirmText || 'Confirmar' }}
             </button>
           </div>

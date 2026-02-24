@@ -33,7 +33,7 @@ const colors = computed(() => colorMap[props.color] ?? colorMap.amber)
 
 <template>
   <div
-    class="relative overflow-hidden bg-gray-800/80 backdrop-blur-sm border border-gray-700 rounded-lg p-5 flex flex-col gap-4 transition-colors duration-200 hover:border-gray-600 group">
+    class="relative overflow-hidden bg-[#1a1a1a]/80 backdrop-blur-sm border border-gray-700 rounded-lg p-5 flex flex-col gap-4 transition-colors duration-200 hover:border-gray-600 group">
     <!-- Loading skeleton -->
     <template v-if="loading">
       <div class="flex items-center justify-between">

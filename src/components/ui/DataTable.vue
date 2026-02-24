@@ -2,7 +2,7 @@
   <div class="data-table">
     <!-- Header con título y botón de acción -->
     <div
-      class="flex items-center justify-between mb-6 bg-gray-900/80 backdrop-blur-sm rounded-lg p-4 border border-gray-700">
+      class="flex items-center justify-between mb-6 bg-[#1a1a1a]/80 backdrop-blur-sm rounded-lg p-4 border border-gray-700">
       <div>
         <h2 class="text-2xl font-bold text-amber-200">{{ title }}</h2>
         <p v-if="subtitle" class="text-sm text-gray-400 mt-1 ml-0.5">{{ subtitle }}</p>
@@ -27,7 +27,7 @@
     </div>
 
     <!-- Estado de carga -->
-    <div v-if="loading" class="bg-gray-900/80 backdrop-blur-sm rounded-lg border border-gray-700 p-8 text-center">
+    <div v-if="loading" class="bg-[#1a1a1a]/80 backdrop-blur-sm rounded-lg border border-gray-700 p-8 text-center">
       <div class="flex justify-center">
         <LoadingSpinner :size="65" />
       </div>
@@ -36,7 +36,7 @@
 
     <!-- Estado sin datos -->
     <div v-else-if="!items || items.length === 0"
-      class="bg-gray-900/80 backdrop-blur-sm rounded-lg border border-gray-700 p-8 text-center">
+      class="bg-[#1a1a1a]/80 backdrop-blur-sm rounded-lg border border-gray-700 p-8 text-center">
       <component :is="emptyIcon" class="h-12 w-12 text-gray-500 mx-auto mb-4" />
       <p class="text-gray-300 font-medium">{{ emptyMessage }}</p>
       <p class="text-sm text-gray-500 mt-2">{{ emptySubtext }}</p>
@@ -47,7 +47,7 @@
     </div>
 
     <!-- Tabla de datos -->
-    <div v-else class="bg-gray-900/80 backdrop-blur-sm rounded-lg border border-gray-700 overflow-hidden">
+    <div v-else class="bg-[#1a1a1a]/80 backdrop-blur-sm rounded-lg border border-gray-700 overflow-hidden">
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-700">
           <thead class="bg-gray-800/80">
@@ -63,7 +63,7 @@
               </th>
             </tr>
           </thead>
-          <tbody class="bg-gray-900 divide-y divide-gray-800">
+          <tbody class="bg-[#1a1a1a] divide-y divide-gray-800">
             <tr v-for="(item, index) in items" :key="getItemKey(item, index)"
               class="hover:bg-gray-800/50 transition-colors duration-150">
               <!-- Renderizado de columnas -->

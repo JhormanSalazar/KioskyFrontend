@@ -56,7 +56,7 @@ const handleLogout = () => {
 </script>
 
 <template>
-  <div class="sidebar h-screen w-64 bg-gray-900 text-white flex flex-col fixed left-0 top-0 z-40">
+  <div class="sidebar h-screen w-64 bg-[#1a1a1a] text-white flex flex-col fixed left-0 top-0 z-40">
     <!-- Header -->
     <div class="p-6 px-4 border-b border-gray-700">
       <div class="flex items-center space-x-2">

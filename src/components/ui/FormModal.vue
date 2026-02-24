@@ -1,40 +1,25 @@
 <template>
   <Teleport to="body">
     <Transition name="modal">
-      <div
-        v-if="isOpen"
-        class="fixed inset-0 z-50 flex items-center justify-center"
-        @click.self="handleCancel"
-      >
+      <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center" @click.self="handleCancel">
         <!-- Backdrop -->
-        <div
-          class="absolute inset-0 backdrop-blur-sm"
-          @click="handleCancel"
-        />
+        <div class="absolute inset-0 backdrop-blur-sm" @click="handleCancel" />
 
         <!-- Modal -->
         <div
-          class="relative bg-gray-900 rounded-lg shadow-xl border border-gray-700 w-full mx-4 transform transition-all"
-          :class="sizeClasses"
-        >
+          class="relative bg-[#1a1a1a] rounded-lg shadow-xl border border-gray-700 w-full mx-4 transform transition-all"
+          :class="sizeClasses">
           <!-- Header -->
           <div class="flex items-center justify-between p-6 border-b border-gray-700">
             <div class="flex items-center space-x-3">
-              <component
-                v-if="icon"
-                :is="icon"
-                class="h-6 w-6 text-amber-200"
-              />
+              <component v-if="icon" :is="icon" class="h-6 w-6 text-amber-200" />
               <h3 class="text-lg font-semibold text-amber-200">
                 {{ title }}
               </h3>
             </div>
 
-            <button
-              @click="handleCancel"
-              class="text-gray-400 hover:text-gray-200 transition-colors duration-200"
-              :disabled="loading"
-            >
+            <button @click="handleCancel" class="text-gray-400 hover:text-gray-200 transition-colors duration-200"
+              :disabled="loading">
               <X class="h-5 w-5" />
             </button>
           </div>
@@ -48,20 +33,13 @@
 
             <!-- Footer con botones de acción -->
             <div class="flex justify-end space-x-3 p-6 border-t border-gray-700">
-              <button
-                type="button"
-                @click="handleCancel"
-                :disabled="loading"
-                class="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-700 border border-gray-600 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+              <button type="button" @click="handleCancel" :disabled="loading"
+                class="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-700 border border-gray-600 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                 {{ cancelText }}
               </button>
 
-              <button
-                type="submit"
-                :disabled="loading || !isValid"
-                class="px-4 py-2 text-sm font-medium bg-amber-200 text-gray-900 rounded-md hover:bg-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 focus:ring-offset-gray-900 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-              >
+              <button type="submit" :disabled="loading || !isValid"
+                class="px-4 py-2 text-sm font-medium bg-amber-200 text-gray-900 rounded-md hover:bg-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 focus:ring-offset-gray-900 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2">
                 <LoadingSpinner v-if="loading" :size="16" color="#1f2937" />
                 <span>{{ loading ? loadingText : submitText }}</span>
               </button>
@@ -174,7 +152,9 @@ const handleCancel = () => {
 
 /* Animación de loading */
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-spin {
@@ -184,7 +164,7 @@ const handleCancel = () => {
 /* Estilos para el scroll del body */
 :deep(.p-6.max-h-\[60vh\]) {
   scrollbar-width: thin;
-  scrollbar-color: #4b5563 #1f2937;
+  scrollbar-color: #4b5563 #1a1a1a;
 }
 
 :deep(.p-6.max-h-\[60vh\])::-webkit-scrollbar {
@@ -192,7 +172,7 @@ const handleCancel = () => {
 }
 
 :deep(.p-6.max-h-\[60vh\])::-webkit-scrollbar-track {
-  background: #1f2937;
+  background: #1a1a1a;
   border-radius: 4px;
 }
 

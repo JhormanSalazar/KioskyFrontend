@@ -106,7 +106,7 @@ function formatRelativeTime(isoDate: string): string {
 
     <!-- Header ────────────────────────────────────────────────────────────── -->
     <div
-      class="flex items-center justify-between bg-gray-900/80 backdrop-blur-sm rounded-lg p-4 border border-gray-700">
+      class="flex items-center justify-between bg-[#1a1a1a]/80 backdrop-blur-sm rounded-lg p-4 border border-gray-700">
       <div>
         <h2 class="text-2xl font-bold text-amber-200">Dashboard</h2>
         <p class="text-sm text-gray-400 mt-1 ml-0.5">
@@ -134,7 +134,7 @@ function formatRelativeTime(isoDate: string): string {
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
       <!-- Recent activity ──── -->
-      <div class="lg:col-span-2 bg-gray-800/80 backdrop-blur-sm rounded-lg border border-gray-700">
+      <div class="lg:col-span-2 bg-[#1a1a1a]/80 backdrop-blur-sm rounded-lg border border-gray-700">
         <div class="flex items-center gap-2 p-4 border-b border-gray-700">
           <Clock class="w-4 h-4 text-amber-400" />
           <h3 class="text-sm font-semibold text-gray-200">Actividad reciente</h3>
@@ -173,7 +173,7 @@ function formatRelativeTime(isoDate: string): string {
       </div>
 
       <!-- Quick summary ────── -->
-      <div class="bg-gray-800/80 backdrop-blur-sm rounded-lg border border-gray-700 flex flex-col">
+      <div class="bg-[#1a1a1a]/80 backdrop-blur-sm rounded-lg border border-gray-700 flex flex-col">
         <div class="flex items-center gap-2 p-4 border-b border-gray-700">
           <BarChart3 class="w-4 h-4 text-amber-400" />
           <h3 class="text-sm font-semibold text-gray-200">Resumen</h3>

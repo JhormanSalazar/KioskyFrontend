@@ -198,7 +198,7 @@ const blockLabel = (type: BlockType) => BLOCK_DEFINITIONS.find((d) => d.type ===
 
     <!-- ── Top bar ─────────────────────────────────────────────────────────── -->
     <div
-      class="flex items-center justify-between mb-4 bg-gray-900/80 backdrop-blur-sm rounded-lg px-4 py-3 border border-gray-700 shrink-0">
+      class="flex items-center justify-between mb-4 bg-[#1a1a1a]/80 backdrop-blur-sm rounded-lg px-4 py-3 border border-gray-700 shrink-0">
       <div>
         <h2 class="text-xl font-bold text-amber-200 leading-tight">Editor del catálogo</h2>
         <p class="text-xs text-gray-300 mt-0.5">Arrastra bloques para construir tu catálogo.</p>
@@ -257,7 +257,7 @@ const blockLabel = (type: BlockType) => BLOCK_DEFINITIONS.find((d) => d.type ===
 
         <!-- ── Left: Palette / Theme ─────────────────────────────────────── -->
         <div v-if="!previewMode"
-          class="w-56 shrink-0 flex flex-col bg-gray-800/80 backdrop-blur-sm border border-gray-700 rounded-lg overflow-hidden">
+          class="w-56 shrink-0 flex flex-col bg-[#1a1a1a]/80 backdrop-blur-sm border border-gray-700 rounded-lg overflow-hidden">
           <!-- Tab switcher -->
           <div class="flex border-b border-gray-700 shrink-0">
             <button
@@ -435,7 +435,7 @@ const blockLabel = (type: BlockType) => BLOCK_DEFINITIONS.find((d) => d.type ===
 
         <!-- ── Right: Block settings ─────────────────────────────────────── -->
         <div v-if="!previewMode"
-          class="w-64 shrink-0 flex flex-col bg-gray-800/80 backdrop-blur-sm border border-gray-700 rounded-lg overflow-hidden">
+          class="w-64 shrink-0 flex flex-col bg-[#1a1a1a]/80 backdrop-blur-sm border border-gray-700 rounded-lg overflow-hidden">
           <div class="flex items-center gap-2 px-4 py-3 border-b border-gray-700 shrink-0">
             <Settings class="w-4 h-4 text-amber-400" />
             <h3 class="text-sm font-semibold text-gray-200">Propiedades</h3>
