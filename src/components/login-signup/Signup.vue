@@ -127,14 +127,9 @@ const handleSubmit = async () => {
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <User class="h-4 w-4 text-gray-500" />
                 </div>
-                <input
-                  id="fullName"
-                  v-model="formData.fullName"
-                  type="text"
-                  placeholder="Juan Pérez"
+                <input id="fullName" v-model="formData.fullName" type="text" placeholder="Juan Pérez"
                   :disabled="loading"
-                  class="w-full rounded-lg border border-gray-700 bg-[#111111] pl-11 pr-4 py-3 text-white placeholder-gray-500 focus:border-amber-200/50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                />
+                  class="w-full rounded-lg border border-gray-700 bg-[#111111] pl-11 pr-4 py-3 text-white placeholder-gray-500 focus:border-amber-200/50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed" />
               </div>
               <p v-if="errors.fullName" class="mt-1.5 text-sm text-red-400">{{ errors.fullName }}</p>
             </div>
@@ -148,14 +143,9 @@ const handleSubmit = async () => {
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Mail class="h-4 w-4 text-gray-500" />
                 </div>
-                <input
-                  id="email"
-                  v-model="formData.email"
-                  type="email"
-                  placeholder="correo@ejemplo.com"
+                <input id="email" v-model="formData.email" type="email" placeholder="correo@ejemplo.com"
                   :disabled="loading"
-                  class="w-full rounded-lg border border-gray-700 bg-[#111111] pl-11 pr-4 py-3 text-white placeholder-gray-500 focus:border-amber-200/50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                />
+                  class="w-full rounded-lg border border-gray-700 bg-[#111111] pl-11 pr-4 py-3 text-white placeholder-gray-500 focus:border-amber-200/50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed" />
               </div>
               <p v-if="errors.email" class="mt-1.5 text-sm text-red-400">{{ errors.email }}</p>
             </div>
@@ -169,20 +159,11 @@ const handleSubmit = async () => {
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Lock class="h-4 w-4 text-gray-500" />
                 </div>
-                <input
-                  id="password"
-                  v-model="formData.password"
-                  :type="showPassword ? 'text' : 'password'"
-                  placeholder="Mínimo 8 caracteres"
-                  :disabled="loading"
-                  class="w-full rounded-lg border border-gray-700 bg-[#111111] pl-11 pr-11 py-3 text-white placeholder-gray-500 focus:border-amber-200/50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                />
-                <button
-                  type="button"
-                  @click="showPassword = !showPassword"
-                  class="absolute inset-y-0 right-0 pr-4 flex items-center"
-                  :disabled="loading"
-                >
+                <input id="password" v-model="formData.password" :type="showPassword ? 'text' : 'password'"
+                  placeholder="Mínimo 8 caracteres" :disabled="loading"
+                  class="w-full rounded-lg border border-gray-700 bg-[#111111] pl-11 pr-11 py-3 text-white placeholder-gray-500 focus:border-amber-200/50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed" />
+                <button type="button" @click="showPassword = !showPassword"
+                  class="absolute inset-y-0 right-0 pr-4 flex items-center" :disabled="loading">
                   <Eye v-if="!showPassword" class="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
                   <EyeOff v-else class="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
                 </button>
@@ -199,21 +180,14 @@ const handleSubmit = async () => {
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Lock class="h-4 w-4 text-gray-500" />
                 </div>
-                <input
-                  id="confirmPassword"
-                  v-model="formData.confirmPassword"
-                  :type="showConfirmPassword ? 'text' : 'password'"
-                  placeholder="Confirma tu contraseña"
+                <input id="confirmPassword" v-model="formData.confirmPassword"
+                  :type="showConfirmPassword ? 'text' : 'password'" placeholder="Confirma tu contraseña"
                   :disabled="loading"
-                  class="w-full rounded-lg border border-gray-700 bg-[#111111] pl-11 pr-11 py-3 text-white placeholder-gray-500 focus:border-amber-200/50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                />
-                <button
-                  type="button"
-                  @click="showConfirmPassword = !showConfirmPassword"
-                  class="absolute inset-y-0 right-0 pr-4 flex items-center"
-                  :disabled="loading"
-                >
-                  <Eye v-if="!showConfirmPassword" class="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
+                  class="w-full rounded-lg border border-gray-700 bg-[#111111] pl-11 pr-11 py-3 text-white placeholder-gray-500 focus:border-amber-200/50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed" />
+                <button type="button" @click="showConfirmPassword = !showConfirmPassword"
+                  class="absolute inset-y-0 right-0 pr-4 flex items-center" :disabled="loading">
+                  <Eye v-if="!showConfirmPassword"
+                    class="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
                   <EyeOff v-else class="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
                 </button>
               </div>
@@ -223,11 +197,8 @@ const handleSubmit = async () => {
             </div>
 
             <!-- Submit -->
-            <button
-              type="submit"
-              :disabled="loading"
-              class="w-full bg-amber-200 text-black font-semibold rounded-lg px-6 py-3 hover:bg-amber-100 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
+            <button type="submit" :disabled="loading"
+              class="w-full bg-amber-200 text-black font-semibold rounded-lg px-6 py-3 hover:bg-amber-100 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
               <span v-if="loading" class="flex items-center justify-center gap-2">
                 <LoadingSpinner :size="20" color="#d1d5db" />
                 Creando cuenta...
@@ -240,10 +211,7 @@ const handleSubmit = async () => {
           <div class="mt-6 text-center">
             <p class="text-sm text-gray-400">
               ¿Ya tienes una cuenta?
-              <router-link
-                to="/login"
-                class="font-medium text-amber-200 hover:text-amber-100 transition-colors"
-              >
+              <router-link to="/login" class="font-medium text-amber-200 hover:text-amber-100 transition-colors">
                 Inicia sesión
               </router-link>
             </p>
