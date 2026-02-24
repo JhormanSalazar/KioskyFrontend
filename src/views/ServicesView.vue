@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import {
   MousePointerClick,
   Package,
@@ -8,7 +9,42 @@ import {
   BarChart3,
   Zap,
   Globe,
+  ChevronDown,
 } from 'lucide-vue-next'
+
+const openFaq = ref<number | null>(null)
+
+function toggleFaq(index: number) {
+  openFaq.value = openFaq.value === index ? null : index
+}
+
+const faqs = [
+  {
+    question: '¿Es gratis crear un catálogo?',
+    answer:
+      'Sí, puedes crear tu catálogo digital de forma completamente gratuita. No necesitas tarjeta de crédito para empezar. Ofrecemos un plan gratuito con todas las funcionalidades básicas para que puedas probar la plataforma sin compromisos.',
+  },
+  {
+    question: '¿Cómo recibo los pedidos de mis clientes?',
+    answer:
+      'Los pedidos se envían directamente a tu WhatsApp. Cuando un cliente selecciona productos de tu catálogo y confirma su pedido, se genera automáticamente un mensaje de WhatsApp con el detalle completo del pedido, incluyendo productos, cantidades y total.',
+  },
+  {
+    question: '¿Necesito conocimientos técnicos?',
+    answer:
+      'No, Kiosky está diseñado para que cualquier persona pueda crear su catálogo sin escribir una sola línea de código. Nuestro editor visual de arrastrar y soltar te permite diseñar tu tienda de forma intuitiva.',
+  },
+  {
+    question: '¿Puedo personalizar el diseño de mi catálogo?',
+    answer:
+      'Sí, puedes personalizar colores, organizar productos por categorías, añadir imágenes y descripciones. Nuestro editor te da control total sobre cómo se ve tu catálogo para que se adapte a la identidad de tu marca.',
+  },
+  {
+    question: '¿Mi catálogo se ve bien en celulares?',
+    answer:
+      'Absolutamente. Todos los catálogos están optimizados para dispositivos móviles de forma automática. El diseño responsive se adapta a cualquier tamaño de pantalla, ofreciendo una experiencia nativa tanto en celulares como en tablets y computadoras.',
+  },
+]
 
 const services = [
   {
@@ -108,23 +144,46 @@ const services = [
       </div>
     </section>
 
-    <!-- CTA -->
+    <!-- FAQ -->
     <section class="hero-bg py-20 px-6">
-      <div class="max-w-3xl mx-auto text-center card-bg rounded-xl p-10 border border-gray-800 space-y-6">
-        <h2 class="text-2xl sm:text-3xl font-bold text-white">
-          Empieza gratis, crece sin límites
-        </h2>
-        <p class="text-gray-400 text-lg">
-          Crea tu catálogo digital en minutos. Sin tarjeta de crédito, sin compromisos.
-        </p>
-        <RouterLink to="/signup">
-          <button
-            class="mt-2 bg-amber-200 text-black font-semibold rounded-lg px-8 py-3 hover:bg-amber-100 transition-colors cursor-pointer">
-            Comenzar ahora
-          </button>
-        </RouterLink>
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center space-y-4 mb-14">
+          <h2 class="text-3xl sm:text-4xl font-bold text-white">
+            Preguntas <span class="text-amber-200">frecuentes</span>
+          </h2>
+          <p class="text-lg text-gray-400">
+            Resolvemos tus dudas antes de empezar
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <div
+            v-for="(faq, index) in faqs"
+            :key="index"
+            class="card-bg rounded-xl border border-gray-800 overflow-hidden transition-colors duration-300"
+            :class="{ 'border-amber-200/20': openFaq === index }"
+          >
+            <button
+              class="w-full flex items-center justify-between p-6 text-left cursor-pointer"
+              @click="toggleFaq(index)"
+            >
+              <span class="text-white font-medium pr-4">{{ faq.question }}</span>
+              <ChevronDown
+                class="w-5 h-5 text-gray-400 shrink-0 transition-transform duration-300"
+                :class="{ 'rotate-180 text-amber-200': openFaq === index }"
+              />
+            </button>
+            <div
+              class="overflow-hidden transition-all duration-300"
+              :class="openFaq === index ? 'max-h-60 pb-6' : 'max-h-0'"
+            >
+              <p class="px-6 text-gray-400 text-sm leading-relaxed">{{ faq.answer }}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
+
   </div>
 </template>
 

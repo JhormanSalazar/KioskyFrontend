@@ -100,151 +100,178 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="signup-container min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full">
-      <!-- Header -->
-      <div class="text-center mb-2">
-        <h2 class="text-4xl font-bold text-gray-100 mb-2">Crear cuenta</h2>
-        <p class="text-gray-400 text-lg">Comienza tu experiencia con Kiosky</p>
+  <div class="signup-page">
+    <!-- Hero header -->
+    <section class="hero-bg pt-20 pb-12 px-6">
+      <div class="max-w-4xl mx-auto text-center space-y-4">
+        <h1 class="text-4xl sm:text-5xl font-bold text-white leading-tight">
+          Crear <span class="text-amber-200">cuenta</span>
+        </h1>
+        <p class="text-lg text-gray-400 max-w-xl mx-auto">
+          Comienza tu experiencia con Kiosky
+        </p>
       </div>
+    </section>
 
-      <!-- Form Card -->
-      <div class="bg-gray-900 rounded-lg shadow-xl p-8 border border-gray-800">
-        <form @submit.prevent="handleSubmit" class="space-y-4">
-          <!-- Full Name -->
-          <div>
-            <label for="fullName" class="block text-sm font-medium text-gray-300 mb-0.5">
-              Nombre completo
-            </label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <User class="h-5 w-5 text-gray-500" />
+    <!-- Form -->
+    <section class="content-bg py-16 px-6">
+      <div class="max-w-md mx-auto">
+        <div class="card-bg rounded-xl p-8 sm:p-10 border border-gray-800">
+          <form @submit.prevent="handleSubmit" class="space-y-5">
+            <!-- Full Name -->
+            <div>
+              <label for="fullName" class="block text-sm font-medium text-gray-300 mb-2">
+                Nombre completo
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <User class="h-4 w-4 text-gray-500" />
+                </div>
+                <input
+                  id="fullName"
+                  v-model="formData.fullName"
+                  type="text"
+                  placeholder="Juan Pérez"
+                  :disabled="loading"
+                  class="w-full rounded-lg border border-gray-700 bg-[#111111] pl-11 pr-4 py-3 text-white placeholder-gray-500 focus:border-amber-200/50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                />
               </div>
-              <input id="fullName" v-model="formData.fullName" type="text" class="input-field pl-10"
-                placeholder="Juan Pérez" />
+              <p v-if="errors.fullName" class="mt-1.5 text-sm text-red-400">{{ errors.fullName }}</p>
             </div>
-            <p v-if="errors.fullName" class="mt-1 text-sm text-red-400">{{ errors.fullName }}</p>
-          </div>
 
-          <!-- Email -->
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-300 mb-0.5">
-              Correo electrónico
-            </label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Mail class="h-5 w-5 text-gray-500" />
+            <!-- Email -->
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
+                Correo electrónico
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Mail class="h-4 w-4 text-gray-500" />
+                </div>
+                <input
+                  id="email"
+                  v-model="formData.email"
+                  type="email"
+                  placeholder="correo@ejemplo.com"
+                  :disabled="loading"
+                  class="w-full rounded-lg border border-gray-700 bg-[#111111] pl-11 pr-4 py-3 text-white placeholder-gray-500 focus:border-amber-200/50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                />
               </div>
-              <input id="email" v-model="formData.email" type="email" class="input-field pl-10"
-                placeholder="correo@ejemplo.com" />
+              <p v-if="errors.email" class="mt-1.5 text-sm text-red-400">{{ errors.email }}</p>
             </div>
-            <p v-if="errors.email" class="mt-1 text-sm text-red-400">{{ errors.email }}</p>
-          </div>
 
-          <!-- Password -->
-          <div>
-            <label for="password" class="block text-sm font-medium text-gray-300 mb-0.5">
-              Contraseña
-            </label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Lock class="h-5 w-5 text-gray-500" />
+            <!-- Password -->
+            <div>
+              <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
+                Contraseña
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Lock class="h-4 w-4 text-gray-500" />
+                </div>
+                <input
+                  id="password"
+                  v-model="formData.password"
+                  :type="showPassword ? 'text' : 'password'"
+                  placeholder="Mínimo 8 caracteres"
+                  :disabled="loading"
+                  class="w-full rounded-lg border border-gray-700 bg-[#111111] pl-11 pr-11 py-3 text-white placeholder-gray-500 focus:border-amber-200/50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+                <button
+                  type="button"
+                  @click="showPassword = !showPassword"
+                  class="absolute inset-y-0 right-0 pr-4 flex items-center"
+                  :disabled="loading"
+                >
+                  <Eye v-if="!showPassword" class="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
+                  <EyeOff v-else class="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
+                </button>
               </div>
-              <input id="password" v-model="formData.password" :type="showPassword ? 'text' : 'password'"
-                class="input-field pl-10 pr-10" placeholder="Mínimo 8 caracteres" />
-              <button type="button" @click="showPassword = !showPassword"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                <Eye v-if="!showPassword" class="h-5 w-5 text-gray-500 hover:text-gray-300" />
-                <EyeOff v-else class="h-5 w-5 text-gray-500 hover:text-gray-300" />
-              </button>
+              <p v-if="errors.password" class="mt-1.5 text-sm text-red-400">{{ errors.password }}</p>
             </div>
-            <p v-if="errors.password" class="mt-1 text-sm text-red-400">{{ errors.password }}</p>
-          </div>
 
-          <!-- Confirm Password -->
-          <div>
-            <label for="confirmPassword" class="block text-sm font-medium text-gray-300 mb-0.5">
-              Confirmar contraseña
-            </label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Lock class="h-5 w-5 text-gray-500" />
+            <!-- Confirm Password -->
+            <div>
+              <label for="confirmPassword" class="block text-sm font-medium text-gray-300 mb-2">
+                Confirmar contraseña
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Lock class="h-4 w-4 text-gray-500" />
+                </div>
+                <input
+                  id="confirmPassword"
+                  v-model="formData.confirmPassword"
+                  :type="showConfirmPassword ? 'text' : 'password'"
+                  placeholder="Confirma tu contraseña"
+                  :disabled="loading"
+                  class="w-full rounded-lg border border-gray-700 bg-[#111111] pl-11 pr-11 py-3 text-white placeholder-gray-500 focus:border-amber-200/50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+                <button
+                  type="button"
+                  @click="showConfirmPassword = !showConfirmPassword"
+                  class="absolute inset-y-0 right-0 pr-4 flex items-center"
+                  :disabled="loading"
+                >
+                  <Eye v-if="!showConfirmPassword" class="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
+                  <EyeOff v-else class="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
+                </button>
               </div>
-              <input id="confirmPassword" v-model="formData.confirmPassword"
-                :type="showConfirmPassword ? 'text' : 'password'" class="input-field pl-10 pr-10"
-                placeholder="Confirma tu contraseña" />
-              <button type="button" @click="showConfirmPassword = !showConfirmPassword"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                <Eye v-if="!showConfirmPassword" class="h-5 w-5 text-gray-500 hover:text-gray-300" />
-                <EyeOff v-else class="h-5 w-5 text-gray-500 hover:text-gray-300" />
-              </button>
+              <p v-if="errors.confirmPassword" class="mt-1.5 text-sm text-red-400">
+                {{ errors.confirmPassword }}
+              </p>
             </div>
-            <p v-if="errors.confirmPassword" class="mt-1 text-sm text-red-400">
-              {{ errors.confirmPassword }}
+
+            <!-- Submit -->
+            <button
+              type="submit"
+              :disabled="loading"
+              class="w-full bg-amber-200 text-black font-semibold rounded-lg px-6 py-3 hover:bg-amber-100 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              <span v-if="loading" class="flex items-center justify-center gap-2">
+                <LoadingSpinner :size="20" color="#d1d5db" />
+                Creando cuenta...
+              </span>
+              <span v-else>Crear cuenta</span>
+            </button>
+          </form>
+
+          <!-- Login Link -->
+          <div class="mt-6 text-center">
+            <p class="text-sm text-gray-400">
+              ¿Ya tienes una cuenta?
+              <router-link
+                to="/login"
+                class="font-medium text-amber-200 hover:text-amber-100 transition-colors"
+              >
+                Inicia sesión
+              </router-link>
             </p>
           </div>
-
-          <!-- Submit Button -->
-          <button type="submit" :disabled="loading" :class="[
-            'w-full font-semibold py-3 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 focus:ring-offset-gray-900',
-            loading
-              ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
-              : 'bg-amber-200 text-black hover:bg-amber-100'
-          ]">
-            <span v-if="loading" class="flex items-center justify-center">
-              <LoadingSpinner :size="20" color="#d1d5db" />
-              <span class="ml-2">Creando cuenta...</span>
-            </span>
-            <span v-else>Crear cuenta</span>
-          </button>
-        </form>
-
-        <!-- Login Link -->
-        <div class="mt-6 text-center">
-          <p class="text-sm text-gray-400">
-            ¿Ya tienes una cuenta?
-            <router-link to="/login" class="font-medium text-amber-200 hover:text-amber-100 transition duration-200">
-              Inicia sesión
-            </router-link>
-          </p>
         </div>
-      </div>
 
-      <!-- Terms -->
-      <p class="mt-6 text-center text-xs text-gray-500">
-        Al crear una cuenta, aceptas nuestros
-        <a href="#" class="text-amber-200 hover:text-amber-100">Términos de Servicio</a>
-        y
-        <a href="#" class="text-amber-200 hover:text-amber-100">Política de Privacidad</a>
-      </p>
-    </div>
+        <!-- Terms -->
+        <p class="mt-8 text-center text-xs text-gray-500">
+          Al crear una cuenta, aceptas nuestros
+          <a href="#" class="text-amber-200 hover:text-amber-100 transition-colors">Términos de Servicio</a>
+          y
+          <a href="#" class="text-amber-200 hover:text-amber-100 transition-colors">Política de Privacidad</a>
+        </p>
+      </div>
+    </section>
   </div>
 </template>
 
 <style scoped>
-.signup-container {
+.hero-bg {
   background-color: #0a0a0a;
 }
 
-.input-field {
-  width: 100%;
-  padding: 0.75rem 2.5rem;
-  background-color: #1f2937;
-  border: 1px solid #374151;
-  border-radius: 0.5rem;
-  color: #f3f4f6;
-  font-size: 0.875rem;
-  transition: all 0.2s;
+.content-bg {
+  background-color: #111111;
 }
 
-.input-field:focus {
-  outline: none;
-  border-color: #fbbf24;
-  background-color: #111827;
-  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
-}
-
-.input-field::placeholder {
-  color: #6b7280;
+.card-bg {
+  background-color: #1a1a1a;
 }
 </style>

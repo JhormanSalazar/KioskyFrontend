@@ -81,136 +81,139 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="login-container min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full">
-      <!-- Header -->
-      <div class="text-center mb-2">
-        <h2 class="text-4xl font-bold text-gray-100 mb-2">Iniciar sesión</h2>
-        <p class="text-gray-400 text-lg">Accede a tu cuenta de Kiosky</p>
+  <div class="login-page">
+    <!-- Hero header -->
+    <section class="hero-bg pt-20 pb-12 px-6">
+      <div class="max-w-4xl mx-auto text-center space-y-4">
+        <h1 class="text-4xl sm:text-5xl font-bold text-white leading-tight">
+          Iniciar <span class="text-amber-200">sesión</span>
+        </h1>
+        <p class="text-lg text-gray-400 max-w-xl mx-auto">
+          Accede a tu cuenta de Kiosky
+        </p>
       </div>
+    </section>
 
-      <!-- Form Card -->
-      <div class="bg-gray-900 rounded-lg shadow-xl p-8 border border-gray-800">
-        <form @submit.prevent="handleSubmit" class="space-y-4">
-          <!-- Email -->
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-300">
-              Correo electrónico
-            </label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Mail class="h-5 w-5 text-gray-500" />
+    <!-- Form -->
+    <section class="content-bg py-16 px-6">
+      <div class="max-w-md mx-auto">
+        <div class="card-bg rounded-xl p-8 sm:p-10 border border-gray-800">
+          <form @submit.prevent="handleSubmit" class="space-y-5">
+            <!-- Email -->
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
+                Correo electrónico
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Mail class="h-4 w-4 text-gray-500" />
+                </div>
+                <input
+                  id="email"
+                  v-model="formData.email"
+                  type="email"
+                  placeholder="correo@ejemplo.com"
+                  :disabled="loading"
+                  class="w-full rounded-lg border border-gray-700 bg-[#111111] pl-11 pr-4 py-3 text-white placeholder-gray-500 focus:border-amber-200/50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                />
               </div>
-              <input id="email" v-model="formData.email" type="email" class="input-field pl-10"
-                placeholder="correo@ejemplo.com" :disabled="loading" />
+              <p v-if="errors.email" class="mt-1.5 text-sm text-red-400">{{ errors.email }}</p>
             </div>
-            <p v-if="errors.email" class="mt-1 text-sm text-red-400">{{ errors.email }}</p>
-          </div>
 
-          <!-- Password -->
-          <div>
-            <label for="password" class="block text-sm font-medium text-gray-300">
-              Contraseña
-            </label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Lock class="h-5 w-5 text-gray-500" />
+            <!-- Password -->
+            <div>
+              <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
+                Contraseña
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Lock class="h-4 w-4 text-gray-500" />
+                </div>
+                <input
+                  id="password"
+                  v-model="formData.password"
+                  :type="showPassword ? 'text' : 'password'"
+                  placeholder="Tu contraseña"
+                  :disabled="loading"
+                  class="w-full rounded-lg border border-gray-700 bg-[#111111] pl-11 pr-11 py-3 text-white placeholder-gray-500 focus:border-amber-200/50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+                <button
+                  type="button"
+                  @click="showPassword = !showPassword"
+                  class="absolute inset-y-0 right-0 pr-4 flex items-center"
+                  :disabled="loading"
+                >
+                  <Eye v-if="!showPassword" class="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
+                  <EyeOff v-else class="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
+                </button>
               </div>
-              <input id="password" v-model="formData.password" :type="showPassword ? 'text' : 'password'"
-                class="input-field pl-10 pr-10" placeholder="Tu contraseña" :disabled="loading" />
-              <button type="button" @click="showPassword = !showPassword"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center" :disabled="loading">
-                <Eye v-if="!showPassword" class="h-5 w-5 text-gray-500 hover:text-gray-300" />
-                <EyeOff v-else class="h-5 w-5 text-gray-500 hover:text-gray-300" />
-              </button>
+              <p v-if="errors.password" class="mt-1.5 text-sm text-red-400">{{ errors.password }}</p>
             </div>
-            <p v-if="errors.password" class="text-sm text-red-400">{{ errors.password }}</p>
-          </div>
 
-          <!-- Forgot Password Link -->
-          <div class="flex items-center justify-end">
-            <a href="#" class="text-sm text-amber-200 hover:text-amber-100 transition duration-200">
-              ¿Olvidaste tu contraseña?
-            </a>
-          </div>
+            <!-- Forgot Password -->
+            <div class="flex justify-end">
+              <a href="#" class="text-sm text-amber-200 hover:text-amber-100 transition-colors">
+                ¿Olvidaste tu contraseña?
+              </a>
+            </div>
 
-          <!-- Submit Button -->
-          <button type="submit" :disabled="loading" :class="[
-            'w-full font-semibold py-3 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 focus:ring-offset-gray-900',
-            loading
-              ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
-              : 'bg-amber-200 text-black hover:bg-amber-100'
-          ]">
-            <span v-if="loading" class="flex items-center justify-center">
-              <LoadingSpinner :size="20" color="#d1d5db" />
-              <span class="ml-2">Iniciando sesión...</span>
-            </span>
-            <span v-else>Iniciar sesión</span>
-          </button>
-        </form>
+            <!-- Submit -->
+            <button
+              type="submit"
+              :disabled="loading"
+              class="w-full bg-amber-200 text-black font-semibold rounded-lg px-6 py-3 hover:bg-amber-100 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              <span v-if="loading" class="flex items-center justify-center gap-2">
+                <LoadingSpinner :size="20" color="#d1d5db" />
+                Iniciando sesión...
+              </span>
+              <span v-else>Iniciar sesión</span>
+            </button>
+          </form>
 
-        <!-- Divider -->
-        <div class="mt-2">
-          <div class="relative">
+          <!-- Divider -->
+          <div class="my-6 relative">
             <div class="absolute inset-0 flex items-center">
               <div class="w-full border-t border-gray-700"></div>
             </div>
             <div class="relative flex justify-center text-sm">
-              <span class="px-2 bg-gray-900 text-gray-400">¿No tienes cuenta?</span>
+              <span class="px-3 text-gray-500" style="background-color: #1a1a1a">¿No tienes cuenta?</span>
             </div>
+          </div>
+
+          <!-- Signup Link -->
+          <div class="text-center">
+            <router-link
+              to="/signup"
+              class="text-sm font-medium text-amber-200 hover:text-amber-100 transition-colors"
+            >
+              Crear cuenta nueva
+            </router-link>
           </div>
         </div>
 
-        <!-- Signup Link -->
-        <div class="mt-2 text-center">
-          <p class="text-sm text-gray-400">
-            <router-link to="/signup" class="font-medium text-amber-200 hover:text-amber-100 transition duration-200">
-              Crear cuenta nueva
-            </router-link>
-          </p>
-        </div>
+        <!-- Terms -->
+        <p class="mt-8 text-center text-xs text-gray-500">
+          Al iniciar sesión, aceptas nuestros
+          <a href="#" class="text-amber-200 hover:text-amber-100 transition-colors">Términos de Servicio</a>
+          y
+          <a href="#" class="text-amber-200 hover:text-amber-100 transition-colors">Política de Privacidad</a>
+        </p>
       </div>
-
-      <!-- Terms -->
-      <p class="mt-6 text-center text-xs text-gray-500">
-        Al iniciar sesión, aceptas nuestros
-        <a href="#" class="text-amber-200 hover:text-amber-100">Términos de Servicio</a>
-        y
-        <a href="#" class="text-amber-200 hover:text-amber-100">Política de Privacidad</a>
-      </p>
-    </div>
+    </section>
   </div>
 </template>
 
 <style scoped>
-.login-container {
+.hero-bg {
   background-color: #0a0a0a;
 }
 
-.input-field {
-  width: 100%;
-  padding: 0.75rem 2.5rem;
-  background-color: #1f2937;
-  border: 1px solid #374151;
-  border-radius: 0.5rem;
-  color: #f3f4f6;
-  font-size: 0.875rem;
-  transition: all 0.2s;
+.content-bg {
+  background-color: #111111;
 }
 
-.input-field:focus {
-  outline: none;
-  border-color: #fbbf24;
-  background-color: #111827;
-  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
-}
-
-.input-field:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.input-field::placeholder {
-  color: #6b7280;
+.card-bg {
+  background-color: #1a1a1a;
 }
 </style>

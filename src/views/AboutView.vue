@@ -96,24 +96,6 @@ const values = [
         </div>
       </div>
     </section>
-
-    <!-- CTA -->
-    <section class="content-bg py-20 px-6">
-      <div class="max-w-3xl mx-auto text-center card-bg rounded-xl p-10 border border-gray-800 space-y-6">
-        <h2 class="text-2xl sm:text-3xl font-bold text-white">
-          Comienza a construir tu catálogo hoy
-        </h2>
-        <p class="text-gray-400 text-lg">
-          Únete a miles de emprendedores que ya confían en Kiosky para digitalizar sus negocios.
-        </p>
-        <RouterLink to="/signup">
-          <button
-            class="mt-2 bg-amber-200 text-black font-semibold rounded-lg px-8 py-3 hover:bg-amber-100 transition-colors cursor-pointer">
-            Crear cuenta gratis
-          </button>
-        </RouterLink>
-      </div>
-    </section>
   </div>
 </template>
 
